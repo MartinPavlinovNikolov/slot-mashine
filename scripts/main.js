@@ -241,6 +241,98 @@
 		};
 	}());
 
+	const Animator = (function(){
+		
+		const config = {
+			'image_starting_point': '-33%',
+			'image_moving_point': '400'
+		};
+
+		function spin(col = 1){
+			
+			setTimeout(function(){
+
+				if(col <= 5){
+
+					let row = 4;
+					while(row >= 0){
+
+						Animator.Rows[`row${row}col${col}`].startSpining();
+						
+						row--;
+					}
+
+					col++;
+
+					Animator.spin(col);
+				}else{
+					setTimeout(function(){
+						$('#spin').removeClass('disabled').addClass('active');
+					}, 3500);
+				}
+			}, 200);
+		}
+
+		function startSpining(iterations = 20){
+			
+			let that = this,
+			movementDown = Number(that.element.css('top').replace('px', ''))+Number(that.element.css('height').replace('px', ''));
+
+			if(iterations !== 0){
+
+				that.element.animate({
+					top: movementDown,
+				}, 130, function(){
+					that.setPositions($('#' + that.element.prop('id')).position().top, $('#' + that.element.prop('id')).position().left);
+					if(that.position.top > config.image_moving_point){
+						
+						that.element.css({top: config.image_starting_point});
+						that.element.children().remove();
+						that.element.append("<img src='images/" + Math.ceil(Math.random()*Math.ceil(6)) + ".png'></img>");
+					}
+					iterations--;
+					that.startSpining(iterations);
+				});
+			}
+		}
+
+		function setPositions(top, left){
+			this.position.top = top;
+			this.position.left = left;
+		}
+
+		const Rows = (function(){
+			
+			const Rows = {};
+
+			for(let i = 1; i <=5; i++){
+				for(let j = 0; j <= 4; j++){
+					let element = $("#row-"+`${j}`+"-col-"+`${i}`);
+
+					Object.defineProperty(Rows, `row${j}col${i}`, {
+						'value': {
+							'element': element,
+							'position': {
+								'top': element.position().top,
+								'left': element.position().left
+							},
+							'startSpining': startSpining,
+							'setPositions': setPositions
+						}
+					});
+				}
+			}
+
+			return Rows;
+		})();
+
+		return {
+			config,
+			spin,
+			Rows
+		};
+	})();
+
 	Bet.setElement('#bet');
 	Amount.setElement('#amount');
 
@@ -248,8 +340,15 @@
 		
 		e.preventDefault();
 
-		//todo: spin the images
 		Amount.changeElementValue(Bet.getBet());
+
+		if($(this).hasClass('active')){
+			
+			$(this).removeClass('active').addClass('disabled');
+
+			Animator.spin();
+
+		}
 
 	});
 

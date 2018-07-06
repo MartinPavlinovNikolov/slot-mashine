@@ -18,10 +18,10 @@
 				<?php
 				for($i = 0;$i < 5; $i++){
 
-					echo "<li><ul>";
+					echo "<li class='slot-row'><ul>";
 
-					for($j = 0;$j < 3; $j++){
-						echo "<li>" . rand(1, 6) . "</li>";
+					for($j = 0;$j <= 4; $j++){
+						echo "<li id='row-" . ($j) . "-col-" . ($i+1) . "'><img src='images/" . rand(1, 6) . ".png'></img></li>";
 					}
 
 					echo "</ul></li>";
