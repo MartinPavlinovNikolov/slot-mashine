@@ -295,499 +295,161 @@
 		}
 
 		function anyWining(arg){
-			const _1_1 = arg.rows.first[0];
-			const _1_2 = arg.rows.first[1];
-			const _1_3 = arg.rows.first[2];
-			const _1_4 = arg.rows.first[3];
-			const _1_5 = arg.rows.first[4];
-			const _2_1 = arg.rows.second[0];
-			const _2_2 = arg.rows.second[1];
-			const _2_3 = arg.rows.second[2];
-			const _2_4 = arg.rows.second[3];
-			const _2_5 = arg.rows.second[4];
-			const _3_1 = arg.rows.third[0];
-			const _3_2 = arg.rows.third[1];
-			const _3_3 = arg.rows.third[2];
-			const _3_4 = arg.rows.third[3];
-			const _3_5 = arg.rows.third[4];
 
-			let points = 0;
+			const CaschePositions = {
+				'_1_1': arg.rows.first[0],
+				'_1_2': arg.rows.first[1],
+				'_1_3': arg.rows.first[2],
+				'_1_4': arg.rows.first[3],
+				'_1_5': arg.rows.first[4],
+				'_2_1': arg.rows.second[0],
+				'_2_2': arg.rows.second[1],
+				'_2_3': arg.rows.second[2],
+				'_2_4': arg.rows.second[3],
+				'_2_5': arg.rows.second[4],
+				'_3_1': arg.rows.third[0],
+				'_3_2': arg.rows.third[1],
+				'_3_3': arg.rows.third[2],
+				'_3_4': arg.rows.third[3],
+				'_3_5': arg.rows.third[4]
+			};
 
-			// xx---
-			// -----
-			// -----
-			if(_1_1 === _1_2){
+			function isMatches(points, row, key){
 
-				// xxx--
-				// -----
-				// -----
-				if(_1_1 === _1_3){
-
-					// xxxx-
-					// -----
-					// -----
-					if(_1_1 === _1_4){
-						points += 2;
-					}
-
-					// xxx--
-					// ---x-
-					// -----
-					if(_1_1 === _2_4){
-						points += 2;
-					}
-
-					points++;
+			//check first vs second cols
+				// Row #1, Col #1 === Row #1, Col #2
+				if(key === Object.keys(CaschePositions)[0] && row === CaschePositions._1_2){
+					points =  isMatches(points, CaschePositions._1_2, Object.keys(CaschePositions)[1]);
+				}
+				// Row #1, Col #1 === Row #2, Col #2
+				if(key === Object.keys(CaschePositions)[0] && row === CaschePositions._2_2){
+					points =  isMatches(points, CaschePositions._2_2), Object.keys(CaschePositions)[6];
 				}
 
-				// xx---
-				// --x--
-				// -----
-				if(_1_1 === _2_3){
-					
-					// xx-x-
-					// --x--
-					// -----
-					if(_1_1 === _1_4){
-						points += 2;
-					}
-
-					// xx---
-					// --xx-
-					// -----
-					if(_1_1 === _2_4){
-						points += 2;
-					}
-
-					// xx---
-					// --x--
-					// ---x-
-					if(_1_1 === _3_4){
-						points += 2;
-					}
-
-					points++;
+				// Row #2, Col #1 === Row #1, Col #2
+				if(key === Object.keys(CaschePositions)[5] && row === CaschePositions._1_2){
+					points =  isMatches(points, CaschePositions._1_2, Object.keys(CaschePositions)[1]);
+				}
+				// Row #2, Col #1 === Row #2, Col #2
+				if(key === Object.keys(CaschePositions)[5] && row === CaschePositions._2_2){
+					points =  isMatches(points, CaschePositions._2_2, Object.keys(CaschePositions)[6]);
+				}
+				// Row #2, Col #1 === Row #3, Col #2
+				if(key === Object.keys(CaschePositions)[5] && row === CaschePositions._3_2){
+					points =  isMatches(points, CaschePositions._3_2, Object.keys(CaschePositions)[11]);
 				}
 
+				// Row #3, Col #1 === Row #2, Col #2
+				if(key === Object.keys(CaschePositions)[10] && row === CaschePositions._2_2){
+					points =  isMatches(points, CaschePositions._2_2, Object.keys(CaschePositions)[6]);
+				}
+				// Row #3, Col #1 === Row #3, Col #2
+				if(key === Object.keys(CaschePositions)[10] && row === CaschePositions._3_2){
+					points =  isMatches(points, CaschePositions._3_2, Object.keys(CaschePositions)[11]);
+				}
+
+			//check second vs third cols
+				// Row #1, Col #2 === Row #1, Col #3
+				if(key === Object.keys(CaschePositions)[1] && row === CaschePositions._1_3){
+					points =  isMatches(points, CaschePositions._1_3, Object.keys(CaschePositions)[2]) + 1;
+				}
+				// Row #1, Col #2 === Row #2, Col #3
+				if(key === Object.keys(CaschePositions)[1] && row === CaschePositions._2_3){
+					points =  isMatches(points, CaschePositions._2_3, Object.keys(CaschePositions)[7]) + 1;
+				}
+
+				// Row #2, Col #2 === Row #1, Col #3
+				if(key === Object.keys(CaschePositions)[6] && row === CaschePositions._1_3){
+					points =  isMatches(points, CaschePositions._1_3, Object.keys(CaschePositions)[2]) + 1;
+				}
+				// Row #2, Col #2 === Row #2, Col #3
+				if(key === Object.keys(CaschePositions)[6] && row === CaschePositions._2_3){
+					points =  isMatches(points, CaschePositions._2_3, Object.keys(CaschePositions)[7]) + 1;
+				}
+				// Row #2, Col #2 === Row #3, Col #3
+				if(key === Object.keys(CaschePositions)[6] && row === CaschePositions._3_3){
+					points =  isMatches(points, CaschePositions._3_3, Object.keys(CaschePositions)[12]) + 1;
+				}
+
+				// Row #3, Col #2 === Row #2, Col #3
+				if(key === Object.keys(CaschePositions)[11] && row === CaschePositions._2_3){
+					points =  isMatches(points, CaschePositions._2_3, Object.keys(CaschePositions)[7]) + 1;
+				}
+				// Row #3, Col #2 === Row #3, Col #3
+				if(key === Object.keys(CaschePositions)[11] && row === CaschePositions._3_3){
+					points =  isMatches(points, CaschePositions._3_3, Object.keys(CaschePositions)[12]) + 1;
+				}
+
+			//check third vs fourth cols
+				// Row #1, Col #3 === Row #1, Col #4
+				if(key === Object.keys(CaschePositions)[2] && row === CaschePositions._1_4){
+					points =  isMatches(points, CaschePositions._1_4, Object.keys(CaschePositions)[3]) + 2;
+				}
+				// Row #1, Col #3 === Row #2, Col #4
+				if(key === Object.keys(CaschePositions)[2] && row === CaschePositions._2_4){
+					points =  isMatches(points, CaschePositions._2_4, Object.keys(CaschePositions)[8]) + 2;
+				}
+
+				// Row #2, Col #3 === Row #1, Col #4
+				if(key === Object.keys(CaschePositions)[7] && row === CaschePositions._1_4){
+					points =  isMatches(points, CaschePositions._1_4, Object.keys(CaschePositions)[3]) + 2;
+				}
+				// Row #2, Col #3 === Row #2, Col #4
+				if(key === Object.keys(CaschePositions)[7] && row === CaschePositions._2_4){
+					points =  isMatches(points, CaschePositions._2_4, Object.keys(CaschePositions)[8]) + 2;
+				}
+				// Row #2, Col #3 === Row #3, Col #4
+				if(key === Object.keys(CaschePositions)[7] && row === CaschePositions._3_4){
+					points =  isMatches(points, CaschePositions._3_4, Object.keys(CaschePositions)[13]) + 2;
+				}
+
+				// Row #3, Col #3 === Row #2, Col #4
+				if(key === Object.keys(CaschePositions)[12] && row === CaschePositions._2_4){
+					points =  isMatches(points, CaschePositions._2_4, Object.keys(CaschePositions)[8]) + 2;
+				}
+				// Row #3, Col #3 === Row #3, Col #4
+				if(key === Object.keys(CaschePositions)[12] && row === CaschePositions._3_4){
+					points =  isMatches(points, CaschePositions._3_4, Object.keys(CaschePositions)[13]) + 2;
+				}
+
+			//check fourth vs fiveth cols
+				// Row #1, Col #4 === Row #1, Col #5
+				if(key === Object.keys(CaschePositions)[3] && row === CaschePositions._1_5){
+					points =  isMatches(points, CaschePositions._1_5, Object.keys(CaschePositions)[4]) + 3;
+				}
+				// Row #1, Col #4 === Row #2, Col #5
+				if(key === Object.keys(CaschePositions)[3] && row === CaschePositions._2_5){
+					points =  isMatches(points, CaschePositions._2_5, Object.keys(CaschePositions)[9]) + 3;
+				}
+
+				// Row #2, Col #4 === Row #1, Col #5
+				if(key === Object.keys(CaschePositions)[8] && row === CaschePositions._1_5){
+					points =  isMatches(points, CaschePositions._1_5, Object.keys(CaschePositions)[4]) + 3;
+				}
+				// Row #2, Col #4 === Row #2, Col #5
+				if(key === Object.keys(CaschePositions)[8] && row === CaschePositions._2_5){
+					points =  isMatches(points, CaschePositions._2_5, Object.keys(CaschePositions)[9]) + 3;
+				}
+				// Row #2, Col #4 === Row #3, Col #5
+				if(key === Object.keys(CaschePositions)[8] && row === CaschePositions._3_5){
+					points =  isMatches(points, CaschePositions._3_5, Object.keys(CaschePositions)[14]) + 3;
+				}
+
+				// Row #3, Col #4 === Row #2, Col #5
+				if(key === Object.keys(CaschePositions)[13] && row === CaschePositions._2_5){
+					points =  isMatches(points, CaschePositions._2_5, Object.keys(CaschePositions)[9]) + 3;
+				}
+				// Row #3, Col #4 === Row #3, Col #5
+				if(key === Object.keys(CaschePositions)[13] && row === CaschePositions._3_5){
+					points =  isMatches(points, CaschePositions._3_5, Object.keys(CaschePositions)[14]) + 3;
+				}
+
+				return points;
 			}
 
-			// x----
-			// -x---
-			// -----
-			if(_1_1 === _2_2){
-
-				// x-x--
-				// -x---
-				// -----
-				if(_1_1 === _1_3){
-					
-					// x-xx-
-					// -x---
-					// -----
-					if(_1_1 === _1_4){
-						points += 2;
-					}
-
-					// x-x--
-					// -x-x-
-					// -----
-					if(_1_1 === _2_4){
-						points += 2;
-					}
-
-					points++;
-				}
-
-				// x----
-				// -xx--
-				// -----
-				if(_1_1 === _2_3){
-
-					// x--x-
-					// -xx--
-					// -----
-					if(_1_1 === _1_4){
-						points += 2;
-					}
-
-					// x----
-					// -xxx-
-					// -----
-					if(_1_1 === _2_4){
-						points += 2;
-					}
-
-					// x----
-					// -xx--
-					// ---x-
-					if(_1_1 === _3_4){
-						points += 2;
-					}
-
-					points++;
-				}
-
-				// x----
-				// -x---
-				// --x--
-				if(_1_1 === _3_3){
-					
-					// x----
-					// -x-x-
-					// --x--
-					if(_1_1 === _2_4){
-						points += 2;
-					}
-
-					// x----
-					// -x---
-					// --xx-
-					if(_1_1 === _3_4){
-						points += 2;
-					}
-
-					points++;
-				}
-
-			}
-			
-			// -x---
-			// x----
-			// -----
-			if(_2_1 === _1_2){
-
-				// -xx--
-				// x----
-				// -----
-				if(_2_1 === _1_3){
-
-					// -xxx-
-					// x----
-					// -----
-					if(_2_1 === _1_4){
-						points += 2;
-					}
-
-					// -xx--
-					// x--x-
-					// -----
-					if(_2_1 === _2_4){
-						points += 2;
-					}
-
-					points++;
-				}
-
-				// -x---
-				// x-x--
-				// -----
-				if(_2_1 === _2_3){
-
-					// -x-x-
-					// x-x--
-					// -----
-					if(_2_1 === _1_4){
-						points += 2;
-					}
-
-					// -x---
-					// x-xx-
-					// -----
-					if(_2_1 === _2_4){
-						points += 2;
-					}
-
-					// -x---
-					// x-x--
-					// ---x-
-					if(_2_1 === _3_4){
-						points += 2;
-					}
-
-					points++;
-				}
-
-			}
-			
-			// -----
-			// xx---
-			// -----
-			if(_2_1 === _2_2){
-
-				// --x--
-				// xx---
-				// -----
-				if(_2_1 === _1_3){
-
-					// --xx-
-					// xx---
-					// -----
-					if(_2_1 === _1_4){
-						points += 2;
-					}
-
-					// --x--
-					// xx-x-
-					// -----
-					if(_2_1 === _2_4){
-						points += 2;
-					}
-
-					points++;
-				}
-
-				// -----
-				// xxx--
-				// -----
-				if(_2_1 === _2_3){
-
-					// ---x-
-					// xxx--
-					// -----
-					if(_2_1 === _1_4){
-						points += 2;
-					}
-
-					// -----
-					// xxxx-
-					// -----
-					if(_2_1 === _2_4){
-						points += 2;
-					}
-
-					// -----
-					// xxx--
-					// ---x-
-					if(_2_1 === _3_4){
-						points += 2;
-					}
-
-					points++;
-				}
-
-				// -----
-				// xx---
-				// --x--
-				if(_2_1 === _3_3){
-
-					// -----
-					// xx-x-
-					// --x--
-					if(_2_1 === _2_4){
-						points += 2;
-					}
-
-					// -----
-					// xx---
-					// --xx-
-					if(_2_1 === _3_4){
-						points += 2;
-					}
-
-					points++;
-				}
-
-			}
-			
-			// -----
-			// x----
-			// -x---
-			if(_2_1 === _3_2){
-
-				// -----
-				// x-x--
-				// -x---
-				if(_2_1 === _2_3){
-
-					// ---x-
-					// x-x--
-					// -x---
-					if(_2_1 === _1_4){
-						points += 2;
-					}
-
-					// -----
-					// x-xx-
-					// -x---
-					if(_2_1 === _2_4){
-						points += 2;
-					}
-
-					// -----
-					// x-x--
-					// -x-x-
-					if(_2_1 === _3_4){
-						points += 2;
-					}
-
-					points++;
-				}
-
-				// -----
-				// x----
-				// -xx--
-				if(_2_1 === _3_3){
-
-					// -----
-					// x--x-
-					// -xx--
-					if(_2_1 === _2_4){
-						points += 2;
-					}
-
-					// -----
-					// x----
-					// -xxx-
-					if(_2_1 === _3_4){
-						points += 2;
-					}
-
-					points++;
-				}
-
-			}
-			
-			// -----
-			// -x---
-			// x----
-			if(_3_1 === _2_2){
-
-				// --x--
-				// -x---
-				// x----
-				if(_3_1 === _1_3){
-
-					// --xx-
-					// -x---
-					// x----
-					if(_3_1 === _1_4){
-						points += 2;
-					}
-
-					// --x--
-					// -x-x-
-					// x----
-					if(_3_1 === _2_4){
-						points += 2;
-					}
-
-					points++;
-				}
-
-				// -----
-				// -xx--
-				// x----
-				if(_3_1 === _2_3){
-
-					// ---x-
-					// -xx--
-					// x----
-					if(_3_1 === _1_4){
-						points += 2;
-					}
-
-					// -----
-					// -xxx-
-					// x----
-					if(_3_1 === _2_4){
-						points += 2;
-					}
-
-					// -----
-					// -xx--
-					// x--x-
-					if(_3_1 === _3_4){
-						points += 2;
-					}
-
-					points++;
-				}
-
-				// -----
-				// -x---
-				// x-x--
-				if(_3_1 === _3_3){
-
-					// -----
-					// -x-x-
-					// x-x--
-					if(_3_1 === _2_4){
-						points += 2;
-					}
-
-					// -----
-					// -x---
-					// x-xx-
-					if(_3_1 === _3_4){
-						points += 2;
-					}
-
-					points++;
-				}
-
-			}
-			
-			// -----
-			// -----
-			// xx---
-			if(_3_1 === _3_2){
-
-				// -----
-				// --x--
-				// xx---
-				if(_3_1 === _2_3){
-
-					// ---x-
-					// --x--
-					// xx---
-					if(_3_1 === _1_4){
-						points += 2;
-					}
-
-					// -----
-					// --xx-
-					// xx---
-					if(_3_1 === _2_4){
-						points += 2;
-					}
-
-					// -----
-					// --x--
-					// xx-x-
-					if(_3_1 === _3_4){
-						points += 2;
-					}
-
-					points++;
-				}
-
-				// -----
-				// -----
-				// xxx--
-				if(_3_1 === _3_3){
-
-					// -----
-					// ---x-
-					// xxx--
-					if(_3_1 === _2_4){
-						points += 2;
-					}
-
-					// -----
-					// -----
-					// xxxx-
-					if(_3_1 === _3_4){
-						points += 2;
-					}
-
-					points++;
-				}
-
-			}
-
-			console.log(points * Bet.getBet());
-
+console.log(isMatches(0, CaschePositions._1_1, '_1_1') + isMatches(0, CaschePositions._2_1, '_2_1') + isMatches(0, CaschePositions._3_1, '_3_1'));
 		}
+
 
 		const Rows = (function(){
 			
