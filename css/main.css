@@ -262,3 +262,44 @@ label {
 .disabled {
 	background-color: gray;
 }
+
+.wining {
+	border: 3px solid white;
+	border-radius: 50%;
+	animation: rotate .6s linear infinite;
+}
+.displayWiningCash {
+	position:absolute;
+	top:20vh;
+	right:0;
+	font-size: 100px;
+	opacity: .8;
+	border: 10px solid purple;
+	border-radius: 20px;
+	background-color: green;
+	color: white;
+	animation: displayWiningCash 2s linear infinite;	
+}
+@keyframes rotate {
+	50%{
+		transform: rotate(180deg) scale(.5);
+	}
+	100%{
+		transform: rotate(360deg) scale(1);
+	}
+}
+
+@keyframes displayWiningCash {
+	10%{
+		transform: translateX(-25vw);
+	}
+	30%{
+		transform: translateX(-35vw);
+	}
+	50%{
+		transform: translateX(-100vw);
+	}
+	100%{
+		transform: translateX(-100vw);
+	}
+}
