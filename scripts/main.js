@@ -1,5 +1,21 @@
 (function($){
 
+	const ButtonsManager = (function(){
+
+		function disable(element_id){
+			$('#'+element_id).removeClass('active').addClass('disabled');
+		}
+
+		function activate(element_id){
+			$('#'+element_id).removeClass('disabled').addClass('active');
+		}
+
+		return {
+			disable,
+			activate
+		};
+	})();
+
 	const Amount = (function(){
 
 		let _element = null;
