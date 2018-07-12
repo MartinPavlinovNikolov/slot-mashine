@@ -197,6 +197,7 @@ img {
 	width: 80%;
 	height: 80%;
 	margin: 5px;
+	background-color: #718ae1;
 	border: 3px solid black;
 	border-radius: 15px;
 	display: flex;
@@ -205,6 +206,7 @@ img {
 }
 #spin-container {
 	align-items: center;
+	position: relative;
 }
 
 label {
@@ -214,13 +216,56 @@ label {
 #bet-controls, #amount-controls {
 	display: flex;
 	flex-wrap: wrap;
+	padding: 2%;
 }
 
 #bet-up, #bet-down {
 	border: 3px solid black;
 	border-radius: 5px;
 	display: block;
-	width: 50%;
+	color: white;
+	width: 46%;
+}
+
+#bet-up {
+	margin: 2% 0 0 4%;
+}
+#bet-down {
+	margin: 2% 4% 0 0;
+}
+
+#max-bet, #min-bet {
+	border: 3px solid black;
+	border-radius: 20px;
+	display: block;
+	width: 25%;
+	height: 20px;
+	font-size: 10px;
+	color: white;
+}
+#max-bet{
+	margin: 2% 20% 2% 5%;
+}
+#min-bet{
+	margin: 2% 5% 2% 20%;
+}
+
+#auto-play {
+	position: absolute;
+	right: 5%;
+	border: 3px solid black;
+	border-radius: 20px;
+	display: block;
+	width: 25%;
+	height: 40px;
+	font-size: 14px;
+	color: white;	
+}
+#auto-play.active {
+	background-color: blue;
+}
+#auto-play.disabled {
+	background-color: red;
 }
 
 #amount {
@@ -257,10 +302,18 @@ label {
 }
 
 .active {
-	background-color: green;
+	background-color: #28ec28;
 }
 .disabled {
-	background-color: gray;
+	background-color: #7a7676;
+}
+
+#min-bet.active {
+	background-color: #5151d8;
+}
+
+#max-bet.active {
+	background-color: #f32659;
 }
 
 .wining {
@@ -280,6 +333,11 @@ label {
 	color: white;
 	animation: displayWiningCash 2s linear infinite;	
 }
+
+.click {
+	background-color: orange;
+}
+
 @keyframes rotate {
 	50%{
 		transform: rotate(180deg) scale(.5);

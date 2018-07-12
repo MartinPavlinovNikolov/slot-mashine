@@ -1,4 +1,4 @@
-(function($){
+const SlotMashine = (function($){
 
 	const ButtonsManager = (function(){
 
@@ -7,13 +7,32 @@
 		setElement('betDown', 'bet-down');
 		setElement('spin', 'spin');
 		setElement('amount', 'amount');
+		setElement('maxBet', 'max-bet');
+		setElement('minBet', 'min-bet');
+
+		function wasCliked(element_id){
+			
+			let element = $('#'+element_id);
+			
+			if(element.hasClass('active')){
+				element.removeClass('active').addClass('click');
+				setTimeout(() => {element.removeClass('click').addClass('active')}, 200);
+			}
+
+
+			return this;
+		}
 
 		function disable(element_id){
 			$('#'+element_id).removeClass('active').addClass('disabled');
+
+			return this;
 		}
 
 		function activate(element_id){
 			$('#'+element_id).removeClass('disabled').addClass('active');
+
+			return this;
 		}
 
 		function isActive(element_id){
@@ -26,10 +45,101 @@
 
 		function setElement(property, element_id){
 			this[property] = $('#'+element_id);
+
+			return this;
 		}
 
 		function getElement(element){
 			return this[element];
+		}
+
+		function afterBetUp(){
+			
+			if(Amount.getAmount() < (Bet.takeAllBets()[Bet.getBetIndex()+1]) || Bet.getBet() === 2000){
+				this.disable('bet-up');
+			}
+
+			if(Bet.getBet() === 10 || Amount.getAmount() >= (Bet.takeAllBets()[Bet.getBetIndex()+1])){
+				this.activate('bet-down');
+			}
+
+			return this;
+		}
+
+		function afterBetDown (){
+			
+			if(Bet.getBet() === 5){
+				this.disable('bet-down');
+			}
+
+			if(Bet.getBet() === 1600){
+				this.activate('bet-up');
+			}
+
+			if(Bet.getBet() <= Amount.getAmount()){
+				this.activate('bet-up');
+			}
+
+			return this;
+		}
+
+		function afterSpin(){
+
+			let incoming_cash = Bet.getCacheIncomingCash();
+
+			Amount.add(incoming_cash);
+
+			this.changeElementValue('amount', Amount.getAmount());
+
+			if(incoming_cash !== 0){
+				Animator.displayFreshCash(incoming_cash);
+			}
+
+			if(Amount.getAmount() >= 10){
+				this.activate('bet-up');
+				this.activate('bet-down');
+				this.activate('min-bet');
+			}
+
+			if(Amount.getAmount() >= 10 && Amount.getAmount() >= Bet.takeAllBets()[Bet.getBetIndex()+1]){
+				this.activate('max-bet');
+			}
+
+			if(Amount.getAmount() < 5){
+				this.disable('spin');
+			}else{
+				this.activate('spin');
+			}
+
+			if(Amount.getAmount() < Bet.getBet()){
+				Bet.setBet(5).setBetIndex(0);
+				this.changeElementValue('bet', 5);
+
+				if(Amount.getAmount() > Bet.getBet()){
+					this.activate('bet-up');
+					this.activate('max-bet');
+				}
+			}
+
+			if(Bet.getBet() === 2000){
+				this.disable('bet-up');
+				this.disable('max-bet');
+			}
+
+			return this;
+		}
+
+		function changeElementValue(target, monney){
+
+			monney = (monney / 100).toFixed(2).toString();
+
+			if(monney.substr(1, 1) == '.'){
+				monney = '0' + monney;
+			}
+
+			ButtonsManager[target].text(monney);
+
+			return this;
 		}
 
 		return {
@@ -38,12 +148,19 @@
 			betUp,
 			betDown,
 			spin,
+			minBet,
+			maxBet,
+			wasCliked,
 			disable,
 			activate,
 			isActive,
 			isDisabled,
 			setElement,
-			getElement
+			getElement,
+			afterBetUp,
+			afterBetDown,
+			afterSpin,
+			changeElementValue
 		};
 	})();
 
@@ -64,50 +181,18 @@
 		function substract(value){
 			_value -= value;
 
-			if(_value < Bet.getBet()){
-				Bet.setBet(5);
-				ButtonsManager.bet.text('00.05');
-				ButtonsManager.disable('bet-down');
-
-				if(_value <= Bet.getBet()){
-					ButtonsManager.disable('bet-up');
-				}else{
-					ButtonsManager.activate('bet-up');
-				}
-
-				if(_value < 5){
-					ButtonsManager.disable('spin');
-				}
-			}
-
-			if(_value === Bet.getBet()){
-				ButtonsManager.disable('bet-up');
-			}
+			return this;
 		}
 
 		function add(value){
 			_value += value;
 		}
 
-		function changeElementValue(value){
-
-			let newValue = (_value / 100).toFixed(2).toString();
-
-			if(newValue.substr(1, 1) == '.'){
-				newValue = '0' + newValue;
-			}
-
-			ButtonsManager.amount.text(newValue);
-
-			return this;
-		}
-
 		return {
 			substract,
 			add,
 			getAmount,
-			setAmount,
-			changeElementValue
+			setAmount
 		}
 
 	})(ButtonsManager);
@@ -123,35 +208,26 @@
 			'setBetIndex': (i) => (_bets.current_bet_index = i)
 		};
 
+		let incoming_cash = 0;
+
 		function getBet(){
 			return _bets.all[_bets.current_bet_index];
 		}
 
 		function setBet(bet){
-			_bets.current_bet_index = bet;
+
+			_bets.setBetIndex(this.takeAllBets().findIndex(_bet => {
+				return _bet === bet;
+			}));
+
+			return this;
 		}
 
 		function betDown(){
 
 			if(ButtonsManager.isActive('bet-down')){
 
-				_bets.setBetIndex(_bets.getBetIndex()-1);
-				
-				if(this.getBet() === 5){
-					ButtonsManager.disable('bet-down');
-				}
-
-				if(this.getBet() === 1600){
-					ButtonsManager.activate('bet-up');
-				}
-				
-				if(ButtonsManager.isActive('spin')){
-					this.changeElementValue();
-				}
-
-				if(this.getBet() <= Amount.getAmount()){
-					ButtonsManager.activate('bet-up');
-				}
+				this.setBetIndex(this.getBetIndex()-1);
 
 				return this;
 			}
@@ -163,20 +239,9 @@
 
 				this.setBetIndex(this.getBetIndex()+1);
 
-				if(Amount.getAmount() < (this.takeAllBets()[this.getBetIndex()+1]) || this.getBet() === 2000){
-					ButtonsManager.disable('bet-up');
-				}
-
-				if(this.getBet() === 10){
-					ButtonsManager.activate('bet-down');
-				}
-				
-				if(ButtonsManager.isActive('spin')){
-					this.changeElementValue();
-				}
-
-				return this;
 			}
+
+			return this;
 		}
 
 		function setBetIndex(i){
@@ -191,17 +256,16 @@
 			return _bets.all;
 		}
 
-		function changeElementValue(){
+		function setCacheIncomingCash(cash){
 
-			let monney = (this.getBet() / 100).toFixed(2).toString();
-
-			if(monney.substr(1, 1) == '.'){
-				monney = '0' + monney;
-			}
-
-			ButtonsManager.bet.text(monney);
+			this.incoming_cash = cash;
 
 			return this;
+		}
+
+		function getCacheIncomingCash(){
+
+			return this.incoming_cash;
 		}
 
 		return {
@@ -212,7 +276,8 @@
 			getBetIndex,
 			betUp,
 			betDown,
-			changeElementValue
+			setCacheIncomingCash,
+			getCacheIncomingCash
 		};
 	}());
 
@@ -250,7 +315,7 @@
 		};
 
 		function spin(col = 1){
-			
+
 			setTimeout(function(){
 
 				if(col <= 5){
@@ -258,23 +323,11 @@
 					let row = 4;
 					while(row >= 0){
 
-						Animator.Rows[`row${row}col${col}`].startSpining();
-						
+						Animator.Rows[`row${row}col${col}`].startSpining();						
 						row--;
 					}
-
 					col++;
-
 					Animator.spin(col);
-				}else{
-					setTimeout(function(){
-						if(Amount.getAmount() < 5){
-							ButtonsManager.disable('spin');
-						}else{
-							ButtonsManager.activate('spin');
-						}
-
-					}, 3500);
 				}
 			}, 200);
 		}
@@ -316,20 +369,8 @@
 
 						if(that.element.prop('id') === 'row-1-col-5'){
 
-							const incoming_cash = (Animator.anyWining(grid)) * Bet.getBet();
-
-							Amount.add(incoming_cash);
-							Amount.changeElementValue(Amount.getAmount());
+							Bet.setCacheIncomingCash((Animator.colectLines(grid)) * Bet.getBet());
 							Animator.linghtWiningImages(grid.wining_ids);
-							
-							if(incoming_cash !== 0){
-								Animator.displayFreshCash(incoming_cash);
-							}
-
-							if(ButtonsManager.isDisabled('bet-up') && Amount.getAmount() >= 5){
-								ButtonsManager.activate('bet-up');
-								ButtonsManager.activate('spin');
-							}
 
 							grid.rows.first = [];
 							grid.rows.second = [];
@@ -349,6 +390,8 @@
 		function setPositions(top, left){
 			this.position.top = top;
 			this.position.left = left;
+
+			return this;
 		}
 
 		function linghtWiningImages(ids){
@@ -360,6 +403,8 @@
 					target.removeClass('wining');
 				}, 1800);
 			}
+
+			return this;
 		}
 
 		function displayFreshCash(monney){
@@ -373,9 +418,11 @@
 			setTimeout(function(){
 				$('#remove-me').remove();
 			}, 2000);
+
+			return this;
 		}
 
-		function anyWining(arg){
+		function colectLines(arg){
 
 			const CaschePositions = {
 				'_1_1': arg.rows.first[0],
@@ -412,15 +459,15 @@
 				'_3_5': arg.ids.third[4]	
 			};
 
-			function isMatches(points = null, row = null, key = null, first_col_cache){
+			function hasMaches(points = null, row = null, key = null, first_col_cache){
 
 				if(points === null){
 					
-					let first = Math.ceil(isMatches(0, CaschePositions._1_1, '_1_1') * koeficent.current);
+					let first = Math.ceil(hasMaches(0, CaschePositions._1_1, '_1_1') * koeficent.current);
 					koeficent.current = 0;
-					let second = Math.ceil(isMatches(0, CaschePositions._2_1, '_2_1') * koeficent.current);
+					let second = Math.ceil(hasMaches(0, CaschePositions._2_1, '_2_1') * koeficent.current);
 					koeficent.current = 0;
-					let third = Math.ceil(isMatches(0, CaschePositions._3_1, '_3_1') * koeficent.current);
+					let third = Math.ceil(hasMaches(0, CaschePositions._3_1, '_3_1') * koeficent.current);
 					koeficent.current = 0;
 					return first + second + third;
 				}
@@ -428,33 +475,33 @@
 			//check first vs second cols
 				// Row #1, Col #1 === Row #1, Col #2
 				if(key === Object.keys(CaschePositions)[0] && row === CaschePositions._1_2){
-					points =  isMatches(points, CaschePositions._1_2, '_1_2', CascheIds[Object.keys(CaschePositions)[0]]);
+					points =  hasMaches(points, CaschePositions._1_2, '_1_2', CascheIds[Object.keys(CaschePositions)[0]]);
 				}
 				// Row #1, Col #1 === Row #2, Col #2
 				if(key === Object.keys(CaschePositions)[0] && row === CaschePositions._2_2){
-					points =  isMatches(points, CaschePositions._2_2, '_2_2', CascheIds[Object.keys(CaschePositions)[0]]);
+					points =  hasMaches(points, CaschePositions._2_2, '_2_2', CascheIds[Object.keys(CaschePositions)[0]]);
 				}
 
 				// Row #2, Col #1 === Row #1, Col #2
 				if(key === Object.keys(CaschePositions)[5] && row === CaschePositions._1_2){
-					points =  isMatches(points, CaschePositions._1_2, '_1_2', CascheIds[Object.keys(CaschePositions)[5]]);
+					points =  hasMaches(points, CaschePositions._1_2, '_1_2', CascheIds[Object.keys(CaschePositions)[5]]);
 				}
 				// Row #2, Col #1 === Row #2, Col #2
 				if(key === Object.keys(CaschePositions)[5] && row === CaschePositions._2_2){
-					points =  isMatches(points, CaschePositions._2_2, '_2_2', CascheIds[Object.keys(CaschePositions)[5]]);
+					points =  hasMaches(points, CaschePositions._2_2, '_2_2', CascheIds[Object.keys(CaschePositions)[5]]);
 				}
 				// Row #2, Col #1 === Row #3, Col #2
 				if(key === Object.keys(CaschePositions)[5] && row === CaschePositions._3_2){
-					points =  isMatches(points, CaschePositions._3_2, '_3_2', CascheIds[Object.keys(CaschePositions)[5]]);
+					points =  hasMaches(points, CaschePositions._3_2, '_3_2', CascheIds[Object.keys(CaschePositions)[5]]);
 				}
 
 				// Row #3, Col #1 === Row #2, Col #2
 				if(key === Object.keys(CaschePositions)[10] && row === CaschePositions._2_2){
-					points =  isMatches(points, CaschePositions._2_2, '_2_2', CascheIds[Object.keys(CaschePositions)[10]]);
+					points =  hasMaches(points, CaschePositions._2_2, '_2_2', CascheIds[Object.keys(CaschePositions)[10]]);
 				}
 				// Row #3, Col #1 === Row #3, Col #2
 				if(key === Object.keys(CaschePositions)[10] && row === CaschePositions._3_2){
-					points =  isMatches(points, CaschePositions._3_2, '_3_2', CascheIds[Object.keys(CaschePositions)[10]]);
+					points =  hasMaches(points, CaschePositions._3_2, '_3_2', CascheIds[Object.keys(CaschePositions)[10]]);
 				}
 
 			//check second vs third cols
@@ -464,7 +511,7 @@
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[1]]);
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[2]]);
 					koeficent.current = koeficent.avalible[row];
-					points =  isMatches(points, CaschePositions._1_3, '_1_3') + 1;
+					points =  hasMaches(points, CaschePositions._1_3, '_1_3') + 1;
 				}
 				// Row #1, Col #2 === Row #2, Col #3
 				if(key === Object.keys(CaschePositions)[1] && row === CaschePositions._2_3){
@@ -472,7 +519,7 @@
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[1]]);
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[7]]);
 					koeficent.current = koeficent.avalible[row];
-					points =  isMatches(points, CaschePositions._2_3, '_2_3') + 1;
+					points =  hasMaches(points, CaschePositions._2_3, '_2_3') + 1;
 				}
 
 				// Row #2, Col #2 === Row #1, Col #3
@@ -481,7 +528,7 @@
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[6]]);
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[2]]);
 					koeficent.current = koeficent.avalible[row];
-					points =  isMatches(points, CaschePositions._1_3, '_1_3') + 1;
+					points =  hasMaches(points, CaschePositions._1_3, '_1_3') + 1;
 				}
 				// Row #2, Col #2 === Row #2, Col #3
 				if(key === Object.keys(CaschePositions)[6] && row === CaschePositions._2_3){
@@ -489,7 +536,7 @@
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[6]]);
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[7]]);
 					koeficent.current = koeficent.avalible[row];
-					points =  isMatches(points, CaschePositions._2_3, '_2_3') + 1;
+					points =  hasMaches(points, CaschePositions._2_3, '_2_3') + 1;
 				}
 				// Row #2, Col #2 === Row #3, Col #3
 				if(key === Object.keys(CaschePositions)[6] && row === CaschePositions._3_3){
@@ -497,7 +544,7 @@
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[6]]);
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[12]]);
 					koeficent.current = koeficent.avalible[row];
-					points =  isMatches(points, CaschePositions._3_3, '_3_3') + 1;
+					points =  hasMaches(points, CaschePositions._3_3, '_3_3') + 1;
 				}
 
 				// Row #3, Col #2 === Row #2, Col #3
@@ -506,7 +553,7 @@
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[11]]);
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[7]]);
 					koeficent.current = koeficent.avalible[row];
-					points =  isMatches(points, CaschePositions._2_3, '_2_3') + 1;
+					points =  hasMaches(points, CaschePositions._2_3, '_2_3') + 1;
 				}
 				// Row #3, Col #2 === Row #3, Col #3
 				if(key === Object.keys(CaschePositions)[11] && row === CaschePositions._3_3){
@@ -514,91 +561,91 @@
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[11]]);
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[12]]);
 					koeficent.current = koeficent.avalible[row];
-					points =  isMatches(points, CaschePositions._3_3, '_3_3') + 1;
+					points =  hasMaches(points, CaschePositions._3_3, '_3_3') + 1;
 				}
 
 			//check third vs fourth cols
 				// Row #1, Col #3 === Row #1, Col #4
 				if(key === Object.keys(CaschePositions)[2] && row === CaschePositions._1_4){
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[3]]);
-					points =  isMatches(points, CaschePositions._1_4, '_1_4') + 2;
+					points =  hasMaches(points, CaschePositions._1_4, '_1_4') + 2;
 				}
 				// Row #1, Col #3 === Row #2, Col #4
 				if(key === Object.keys(CaschePositions)[2] && row === CaschePositions._2_4){
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[8]]);
-					points =  isMatches(points, CaschePositions._2_4, '_2_4') + 2;
+					points =  hasMaches(points, CaschePositions._2_4, '_2_4') + 2;
 				}
 
 				// Row #2, Col #3 === Row #1, Col #4
 				if(key === Object.keys(CaschePositions)[7] && row === CaschePositions._1_4){
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[3]]);
-					points =  isMatches(points, CaschePositions._1_4, '_1_4') + 2;
+					points =  hasMaches(points, CaschePositions._1_4, '_1_4') + 2;
 				}
 				// Row #2, Col #3 === Row #2, Col #4
 				if(key === Object.keys(CaschePositions)[7] && row === CaschePositions._2_4){
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[8]]);
-					points =  isMatches(points, CaschePositions._2_4, '_2_4') + 2;
+					points =  hasMaches(points, CaschePositions._2_4, '_2_4') + 2;
 				}
 				// Row #2, Col #3 === Row #3, Col #4
 				if(key === Object.keys(CaschePositions)[7] && row === CaschePositions._3_4){
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[13]]);
-					points =  isMatches(points, CaschePositions._3_4, '_3_4') + 2;
+					points =  hasMaches(points, CaschePositions._3_4, '_3_4') + 2;
 				}
 
 				// Row #3, Col #3 === Row #2, Col #4
 				if(key === Object.keys(CaschePositions)[12] && row === CaschePositions._2_4){
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[8]]);
-					points =  isMatches(points, CaschePositions._2_4, '_2_4') + 2;
+					points =  hasMaches(points, CaschePositions._2_4, '_2_4') + 2;
 				}
 				// Row #3, Col #3 === Row #3, Col #4
 				if(key === Object.keys(CaschePositions)[12] && row === CaschePositions._3_4){
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[13]]);
-					points =  isMatches(points, CaschePositions._3_4, '_3_4') + 2;
+					points =  hasMaches(points, CaschePositions._3_4, '_3_4') + 2;
 				}
 
 			//check fourth vs fiveth cols
 				// Row #1, Col #4 === Row #1, Col #5
 				if(key === Object.keys(CaschePositions)[3] && row === CaschePositions._1_5){
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[4]]);
-					points =  isMatches(points, CaschePositions._1_5, '_1_5') + 3;
+					points =  hasMaches(points, CaschePositions._1_5, '_1_5') + 3;
 				}
 				// Row #1, Col #4 === Row #2, Col #5
 				if(key === Object.keys(CaschePositions)[3] && row === CaschePositions._2_5){
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[9]]);
-					points =  isMatches(points, CaschePositions._2_5, '_2_5') + 3;
+					points =  hasMaches(points, CaschePositions._2_5, '_2_5') + 3;
 				}
 
 				// Row #2, Col #4 === Row #1, Col #5
 				if(key === Object.keys(CaschePositions)[8] && row === CaschePositions._1_5){
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[4]]);
-					points =  isMatches(points, CaschePositions._1_5, '_1_5') + 3;
+					points =  hasMaches(points, CaschePositions._1_5, '_1_5') + 3;
 				}
 				// Row #2, Col #4 === Row #2, Col #5
 				if(key === Object.keys(CaschePositions)[8] && row === CaschePositions._2_5){
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[9]]);
-					points =  isMatches(points, CaschePositions._2_5, '_2_5') + 3;
+					points =  hasMaches(points, CaschePositions._2_5, '_2_5') + 3;
 				}
 				// Row #2, Col #4 === Row #3, Col #5
 				if(key === Object.keys(CaschePositions)[8] && row === CaschePositions._3_5){
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[14]]);
-					points =  isMatches(points, CaschePositions._3_5, '_3_5') + 3;
+					points =  hasMaches(points, CaschePositions._3_5, '_3_5') + 3;
 				}
 
 				// Row #3, Col #4 === Row #2, Col #5
 				if(key === Object.keys(CaschePositions)[13] && row === CaschePositions._2_5){
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[9]]);
-					points =  isMatches(points, CaschePositions._2_5, '_2_5') + 3;
+					points =  hasMaches(points, CaschePositions._2_5, '_2_5') + 3;
 				}
 				// Row #3, Col #4 === Row #3, Col #5
 				if(key === Object.keys(CaschePositions)[13] && row === CaschePositions._3_5){
 					grid.wining_ids.push(CascheIds[Object.keys(CaschePositions)[14]]);
-					points =  isMatches(points, CaschePositions._3_5, '_3_5') + 3;
+					points =  hasMaches(points, CaschePositions._3_5, '_3_5') + 3;
 				}
 
 				return points;
 			}
 
-			return isMatches();
+			return hasMaches();
 		}
 
 
@@ -631,43 +678,137 @@
 			config,
 			spin,
 			Rows,
-			anyWining,
+			colectLines,
 			linghtWiningImages,
 			displayFreshCash
 		};
 	})();
 
-	ButtonsManager.spin.click(function(e){
-		
-		e.preventDefault();
+	function setGame(){
 
-		if(Amount.getAmount() >= 5){
+		ButtonsManager.spin.click(function(e){
 			
-			Amount.substract(Bet.getBet());
-			Amount.changeElementValue(Bet.getBet());
+			e.preventDefault();
 
-			ButtonsManager.disable('spin');
+			if(ButtonsManager.isActive('spin') && Amount.getAmount() >= 5){
 
-			Animator.spin();
+				ButtonsManager.wasCliked('spin');
+				
+				let animate_spining = () => {
+					return new Promise((resolve, reject) => {
 
-		}
+						ButtonsManager.disable('spin');
+						ButtonsManager.disable('bet-up');
+						ButtonsManager.disable('bet-down');
+						ButtonsManager.disable('min-bet');
+						ButtonsManager.disable('max-bet');
 
-	});
+						Amount.substract(Bet.getBet());
+						ButtonsManager.changeElementValue('amount', Amount.getAmount());
 
-	ButtonsManager.betUp.click(function(e){
+						Animator.spin();
+						
+						setTimeout(() => {
+							resolve();
+						}, 4450);
+					});
+				};
+				
+				animate_spining().then(() => {
+					ButtonsManager.afterSpin();
+				});
+
+			}
+
+		});
+
+		return this;
+	}
+
+	function setBetUp(){
 		
-		e.preventDefault();
+		ButtonsManager.betUp.click(function(e){
 
-		Bet.betUp();
+			e.preventDefault();
 
-	});
+			Bet.betUp();
+			ButtonsManager.afterBetUp().changeElementValue('bet', Bet.getBet());
+			ButtonsManager.wasCliked('bet-up');
 
-	ButtonsManager.betDown.click(function(e){
-		
-		e.preventDefault();
+		});
 
-		Bet.betDown();
+		return this;
+	}
 
-	});
-	//todo: return main object with methods and provide chaining for life-cikle for 1 game!
+	function setBetDown(){
+
+		ButtonsManager.betDown.click(function(e){
+			
+			e.preventDefault();
+
+			Bet.betDown();
+			ButtonsManager.afterBetDown().changeElementValue('bet', Bet.getBet());
+			ButtonsManager.wasCliked('bet-down');
+
+		});
+
+		return this;
+	}
+
+	function setMaxBet(){
+
+		ButtonsManager.maxBet.click(function(e){
+
+			e.preventDefault();
+
+			if(ButtonsManager.isActive('max-bet')){
+				
+				let maxPosibleBet = Bet.takeAllBets().reverse().find((b) => {
+					return b <= Amount.getAmount();
+				});
+				let indexOfMaxPosibleBet = Bet.takeAllBets().reverse().findIndex((b) => {
+					return b === maxPosibleBet;
+				});
+
+				Bet.setBet(maxPosibleBet).setBetIndex(indexOfMaxPosibleBet);
+				ButtonsManager.changeElementValue('bet', maxPosibleBet)
+					.disable('bet-up')
+					.activate('bet-down')
+					.disable('max-bet')
+					.activate('min-bet')
+					.wasCliked('max-bet');
+			}
+		});
+
+		return this;
+	}
+
+	function setMinBet(){
+
+		ButtonsManager.minBet.click(function(e){
+
+			e.preventDefault();
+
+			Bet.setBet(5).setBetIndex(0);
+			ButtonsManager.changeElementValue('bet', 5)
+				.activate('bet-up')
+				.disable('bet-down')
+				.disable('min-bet')
+				.activate('max-bet')
+				.wasCliked('min-bet');
+		});
+
+		return this;
+	}
+
+	return {
+		setGame,
+		setBetUp,
+		setBetDown,
+		setMaxBet,
+		setMinBet
+	};
+
 })(jQuery);
+
+SlotMashine.setGame().setBetUp().setBetDown().setMinBet().setMaxBet();

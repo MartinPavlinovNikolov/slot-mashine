@@ -49,11 +49,14 @@
 				<p id="bet">00.05</p>
 				<button id="bet-down" class="disabled">DOWN</button>
 				<button id="bet-up" class="active">UP</button>
+				<button id="min-bet" class="disabled">MIN-BET</button>
+				<button id="max-bet" class="active">MAX-BET</button>
 			</div>
 		</div>
 
 		<div id="spin-container">
 			<button id="spin" class="active">SPIN</button>
+			<button id="auto-play" class="active">Auto-Play todo</button>
 		</div>
 		
 	</div><!--control-pult END-->
