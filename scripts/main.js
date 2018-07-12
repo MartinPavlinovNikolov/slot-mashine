@@ -9,6 +9,7 @@ const SlotMashine = (function($){
 		setElement('amount', 'amount');
 		setElement('maxBet', 'max-bet');
 		setElement('minBet', 'min-bet');
+		setElement('autoPlay', 'auto-play');
 
 		function wasCliked(element_id){
 			
@@ -126,6 +127,10 @@ const SlotMashine = (function($){
 				this.disable('max-bet');
 			}
 
+			if(Bet.getBet() === 5){
+				ButtonsManager.disable('bet-down');
+			}
+
 			return this;
 		}
 
@@ -160,7 +165,8 @@ const SlotMashine = (function($){
 			afterBetUp,
 			afterBetDown,
 			afterSpin,
-			changeElementValue
+			changeElementValue,
+			autoPlay
 		};
 	})();
 
@@ -684,6 +690,48 @@ const SlotMashine = (function($){
 		};
 	})();
 
+	const AutoPlay = (function(){
+
+		function start(){
+			
+			play();
+			
+			ButtonsManager.autoPlay.off();
+			ButtonsManager.autoPlay.click(function(e){
+				AutoPlay.stop();
+			});
+
+			setTimeout(function(){
+				if(AutoPlay.is_auto_play === true){
+					start();
+				}
+			}, 6000);
+		}
+
+		function stop(){
+			ButtonsManager.activate('auto-play');
+			AutoPlay.is_auto_play = false;
+
+			ButtonsManager.autoPlay.off();
+			ButtonsManager.autoPlay.click(function(e){
+
+				AutoPlay.is_auto_play = true;
+				ButtonsManager.disable('auto-play');
+				AutoPlay.start();
+			});
+		}
+
+		function play(){
+			ButtonsManager.spin.trigger('click');
+		}
+
+		return {
+			start,
+			stop,
+			play
+		};
+	})();
+
 	function setGame(){
 
 		ButtonsManager.spin.click(function(e){
@@ -801,14 +849,26 @@ const SlotMashine = (function($){
 		return this;
 	}
 
+	function setAutoPlay(){
+
+		ButtonsManager.autoPlay.click(function(e){
+			ButtonsManager.disable('auto-play');
+			AutoPlay.is_auto_play = true;
+			AutoPlay.start();
+		});
+
+		return this;
+	}
+
 	return {
 		setGame,
 		setBetUp,
 		setBetDown,
 		setMaxBet,
-		setMinBet
+		setMinBet,
+		setAutoPlay
 	};
 
 })(jQuery);
 
-SlotMashine.setGame().setBetUp().setBetDown().setMinBet().setMaxBet();
+SlotMashine.setGame().setBetUp().setBetDown().setMinBet().setMaxBet().setAutoPlay();
