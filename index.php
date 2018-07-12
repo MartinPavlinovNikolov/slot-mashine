@@ -55,6 +55,7 @@
 		</div>
 
 		<div id="spin-container">
+			<button id="speed">Speed Up</button>
 			<button id="spin" class="active">SPIN</button>
 			<button id="auto-play" class="active">Auto-Play</button>
 		</div>

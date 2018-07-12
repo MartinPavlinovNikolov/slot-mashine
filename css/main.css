@@ -2,6 +2,10 @@ body {
 	box-sizing: border-box;
 }
 
+button, p {
+	font-style: italic;
+}
+
 #main-container {
 	margin: 0 auto;
 	width: 90%;
@@ -250,6 +254,19 @@ label {
 	margin: 2% 5% 2% 20%;
 }
 
+#speed {
+	position: absolute;
+	left: 5%;
+	border: 3px solid black;
+	border-radius: 20px;
+	display: block;
+	width: 25%;
+	height: 40px;
+	font-size: 14px;
+	background-color: #f659e4;
+	color: blue;
+}
+
 #auto-play {
 	position: absolute;
 	right: 5%;
@@ -259,7 +276,7 @@ label {
 	width: 25%;
 	height: 40px;
 	font-size: 14px;
-	color: white;	
+	color: white;
 }
 #auto-play.active {
 	background-color: blue;

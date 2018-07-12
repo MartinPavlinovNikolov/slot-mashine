@@ -1,5 +1,31 @@
 const SlotMashine = (function($){
 
+	const TimeMaster = {
+		'wasCliked': 200,
+		'spin': 200,
+		'linghtWiningImages': 2000,
+		'displayFreshCash': 1800,
+		'start': 6000,
+		'animate_spining': 4450,
+		'iterations': 20,
+		'speedUp': (function(){
+			this.spin = 40;
+			this.linghtWiningImages = 800;
+			this.displayFreshCash = 800;
+			this.start = 3000;
+			this.animate_spining = 1850;
+			this.iterations = 8;
+		}),
+		'slowDown': (function(){
+			this.spin = 200;
+			this.linghtWiningImages = 1800;
+			this.displayFreshCash = 1800;
+			this.start = 6000;
+			this.animate_spining = 4450;
+			this.iterations = 20;
+		})
+	};
+
 	const ButtonsManager = (function(){
 
 		setElement('bet', 'bet');
@@ -10,6 +36,7 @@ const SlotMashine = (function($){
 		setElement('maxBet', 'max-bet');
 		setElement('minBet', 'min-bet');
 		setElement('autoPlay', 'auto-play');
+		setElement('speed', 'speed');
 
 		function wasCliked(element_id){
 			
@@ -17,7 +44,7 @@ const SlotMashine = (function($){
 			
 			if(element.hasClass('active')){
 				element.removeClass('active').addClass('click');
-				setTimeout(() => {element.removeClass('click').addClass('active')}, 200);
+				setTimeout(() => {element.removeClass('click').addClass('active')}, TimeMaster.wasClicked);
 			}
 
 
@@ -147,6 +174,14 @@ const SlotMashine = (function($){
 			return this;
 		}
 
+		function speedUp(){
+			TimeMaster.speedUp();
+		}
+
+		function slowDown(){
+			TimeMaster.slowDown();
+		}
+
 		return {
 			amount,
 			bet,
@@ -155,6 +190,7 @@ const SlotMashine = (function($){
 			spin,
 			minBet,
 			maxBet,
+			speed,
 			wasCliked,
 			disable,
 			activate,
@@ -166,7 +202,9 @@ const SlotMashine = (function($){
 			afterBetDown,
 			afterSpin,
 			changeElementValue,
-			autoPlay
+			autoPlay,
+			speedUp,
+			slowDown
 		};
 	})();
 
@@ -335,10 +373,10 @@ const SlotMashine = (function($){
 					col++;
 					Animator.spin(col);
 				}
-			}, 200);
+			}, TimeMaster.spin);
 		}
 
-		function startSpining(iterations = 20){
+		function startSpining(iterations = TimeMaster.iterations){
 			
 			let that = this,
 			movementDown = Number(that.element.css('top').replace('px', ''))+Number(that.element.css('height').replace('px', ''));
@@ -407,7 +445,7 @@ const SlotMashine = (function($){
 				target.addClass('wining');
 				setTimeout(function(){
 					target.removeClass('wining');
-				}, 1800);
+				}, TimeMaster.linghtWiningImages);
 			}
 
 			return this;
@@ -423,7 +461,7 @@ const SlotMashine = (function($){
 			$('body').append('<h2 id="remove-me" class="displayWiningCash">+ ' + monney + '!</h2>');
 			setTimeout(function(){
 				$('#remove-me').remove();
-			}, 2000);
+			}, TimeMaster.displayFreshCash);
 
 			return this;
 		}
@@ -705,7 +743,7 @@ const SlotMashine = (function($){
 				if(AutoPlay.is_auto_play === true){
 					start();
 				}
-			}, 6000);
+			}, TimeMaster.start);
 		}
 
 		function stop(){
@@ -758,7 +796,7 @@ const SlotMashine = (function($){
 						
 						setTimeout(() => {
 							resolve();
-						}, 4450);
+						}, TimeMaster.animate_spining);
 					});
 				};
 				
@@ -804,7 +842,7 @@ const SlotMashine = (function($){
 	}
 
 	function setMaxBet(){
-
+		TimeMaster.speedUp();
 		ButtonsManager.maxBet.click(function(e){
 
 			e.preventDefault();
@@ -860,15 +898,37 @@ const SlotMashine = (function($){
 		return this;
 	}
 
+	function setSpeed(){
+
+		ButtonsManager.slowDown();
+		
+		ButtonsManager.speed.click(function(e){
+
+			e.preventDefault();
+			
+			if(ButtonsManager.speed.text() === 'Speed Up'){
+
+				ButtonsManager.speed.text('Slow Down');
+				ButtonsManager.speedUp();
+			}else{
+
+				ButtonsManager.speed.text('Speed Up');
+				ButtonsManager.slowDown();
+			}
+
+		});
+	}
+
 	return {
 		setGame,
 		setBetUp,
 		setBetDown,
 		setMaxBet,
 		setMinBet,
-		setAutoPlay
+		setAutoPlay,
+		setSpeed
 	};
 
 })(jQuery);
 
-SlotMashine.setGame().setBetUp().setBetDown().setMinBet().setMaxBet().setAutoPlay();
+SlotMashine.setGame().setBetUp().setBetDown().setMinBet().setMaxBet().setAutoPlay().setSpeed();
