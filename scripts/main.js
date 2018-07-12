@@ -2,6 +2,12 @@
 
 	const ButtonsManager = (function(){
 
+		setElement('bet', 'bet');
+		setElement('betUp', 'bet-up');
+		setElement('betDown', 'bet-down');
+		setElement('spin', 'spin');
+		setElement('amount', 'amount');
+
 		function disable(element_id){
 			$('#'+element_id).removeClass('active').addClass('disabled');
 		}
@@ -10,17 +16,40 @@
 			$('#'+element_id).removeClass('disabled').addClass('active');
 		}
 
+		function isActive(element_id){
+			return $('#'+element_id).hasClass('active');
+		}
+
+		function isDisabled(element_id){
+			return $('#'+element_id).hasClass('disabled');
+		}
+
+		function setElement(property, element_id){
+			this[property] = $('#'+element_id);
+		}
+
+		function getElement(element){
+			return this[element];
+		}
+
 		return {
+			amount,
+			bet,
+			betUp,
+			betDown,
+			spin,
 			disable,
-			activate
+			activate,
+			isActive,
+			isDisabled,
+			setElement,
+			getElement
 		};
 	})();
 
-	const Amount = (function(){
+	const Amount = (function(ButtonsManager){
 
-		let _element = null;
-
-		let _value = 2000;
+		let _value = Number(ButtonsManager.amount.text()) * 100;
 
 		function getAmount(){
 			
@@ -32,42 +61,35 @@
 			_value = amount;
 		}
 
-		function setElement (element){
-			
-			_element = element;
-
-			return this;
-		}
-
 		function substract(value){
 			_value -= value;
 
 			if(_value < Bet.getBet()){
 				Bet.setBet(5);
-				$('#bet').text('00.05');
-				$('#bet-down').removeClass('active').addClass('disabled');
+				ButtonsManager.bet.text('00.05');
+				ButtonsManager.disable('bet-down');
 
 				if(_value <= Bet.getBet()){
-					$('#bet-up').removeClass('active').addClass('disabled');
+					ButtonsManager.disable('bet-up');
 				}else{
-					$('#bet-up').removeClass('disabled').addClass('active');
+					ButtonsManager.activate('bet-up');
 				}
 
 				if(_value < 5){
-					$('#spin').removeClass('active').addClass('disabled');
+					ButtonsManager.disable('spin');
 				}
 			}
 
 			if(_value === Bet.getBet()){
-				$('#bet-up').removeClass('active').addClass('disabled');
+				ButtonsManager.disable('bet-up');
 			}
 		}
 
-		function changeElementValue(value, add = false){
+		function add(value){
+			_value += value;
+		}
 
-			if(add === false){
-				substract(value);
-			}
+		function changeElementValue(value){
 
 			let newValue = (_value / 100).toFixed(2).toString();
 
@@ -75,153 +97,121 @@
 				newValue = '0' + newValue;
 			}
 
-			$(_element).text(newValue);
+			ButtonsManager.amount.text(newValue);
 
 			return this;
 		}
 
 		return {
+			substract,
+			add,
 			getAmount,
 			setAmount,
-			setElement,
 			changeElementValue
 		}
 
-	})();
+	})(ButtonsManager);
 
 	const Bet = (function(){
 
-		let _element = null,
-		 _values = {
+		const _bets = {
 			'all':[
 				5, 10, 20, 40, 80, 160, 200, 400, 800, 1600, 2000
 			],
-			'current_value': 5
+			'current_bet_index': 0,
+			'getBetIndex': () => (_bets.current_bet_index),
+			'setBetIndex': (i) => (_bets.current_bet_index = i)
 		};
 
 		function getBet(){
-			return _values.current_value;
+			return _bets.all[_bets.current_bet_index];
 		}
 
 		function setBet(bet){
-			_values.current_value = bet;
+			_bets.current_bet_index = bet;
 		}
 
 		function betDown(){
 
-			for(let i = 0; i <= 10; i++){
+			if(ButtonsManager.isActive('bet-down')){
 
-				if($('#bet-down').hasClass('active') && _values.all[i] === _values.current_value){
-					
-					if(_values.current_value === 10){
-						$('#bet-down').removeClass('active').addClass('disabled');
-					}
-
-					if(_values.current_value === 2000){
-						$('#bet-up').removeClass('disabled').addClass('active');
-					}
-
-					_values.current_value = _values.all[i-1];
-					
-					if($('#spin').hasClass('active')){
-						this.changeElementValue();
-					}
-
-					if(_values.all[i] <= Amount.getAmount()){
-						$('#bet-up').removeClass('disabled').addClass('active');
-					}
-
-					return this;
+				_bets.setBetIndex(_bets.getBetIndex()-1);
+				
+				if(this.getBet() === 5){
+					ButtonsManager.disable('bet-down');
 				}
 
+				if(this.getBet() === 1600){
+					ButtonsManager.activate('bet-up');
+				}
+				
+				if(ButtonsManager.isActive('spin')){
+					this.changeElementValue();
+				}
+
+				if(this.getBet() <= Amount.getAmount()){
+					ButtonsManager.activate('bet-up');
+				}
+
+				return this;
 			}
 		}
 
 		function betUp(){
 
-			for(let i = 0; i <= 10; i++){
+			if(ButtonsManager.isActive('bet-up')){
 
-				if($('#bet-up').hasClass('active') && _values.all[i] === _values.current_value){
+				this.setBetIndex(this.getBetIndex()+1);
 
-					if(_values.current_value === 1600){
-						$('#bet-up').removeClass('active').addClass('disabled');
-					}
-
-					if(_values.current_value === 5){
-						$('#bet-down').removeClass('disabled').addClass('active');
-					}
-
-					_values.current_value = _values.all[i+1];
-
-					if(_values.all[i+2] > Amount.getAmount()){
-						$('#bet-up').removeClass('active').addClass('disabled');
-					}
-
-					if($('#spin').hasClass('active')){
-						this.changeElementValue();
-					}
-					
-					return this;
+				if(Amount.getAmount() < (this.takeAllBets()[this.getBetIndex()+1]) || this.getBet() === 2000){
+					ButtonsManager.disable('bet-up');
 				}
 
+				if(this.getBet() === 10){
+					ButtonsManager.activate('bet-down');
+				}
+				
+				if(ButtonsManager.isActive('spin')){
+					this.changeElementValue();
+				}
+
+				return this;
 			}
 		}
 
-		function setElement (element){
-			
-			_element = element;
+		function setBetIndex(i){
+			_bets.setBetIndex(i);
+		}
 
-			return this;
+		function getBetIndex(){
+			return _bets.getBetIndex();
+		}
+
+		function takeAllBets(){
+			return _bets.all;
 		}
 
 		function changeElementValue(){
 
-			let placeForDot;
-			switch (_values.current_value.toString().length){
-				case 4:
-					placeForDot = 2;
-					break;
-				case 3:
-					placeForDot = 1;
-					break;
-				case 2:
-					placeForDot = 0;
-					break;
-				case 1:
-					placeForDot = null;
-					break;
+			let monney = (this.getBet() / 100).toFixed(2).toString();
+
+			if(monney.substr(1, 1) == '.'){
+				monney = '0' + monney;
 			}
 
-			let newValue;
-			if(placeForDot === null){
-				newValue = _values.current_value.toString();
-			}else{
-				newValue = [_values.current_value.toString().slice(0, placeForDot), '.', _values.current_value.toString().slice(placeForDot)].join('');
-			}
-
-			switch (newValue.length){
-				case 4:
-					newValue = '0' + newValue;
-					break;
-				case 3:
-					newValue = '00' + newValue;
-					break;
-				case 1:
-					newValue = '00.0' + newValue;
-					break;
-			}
-
-			$(_element).text(newValue);
+			ButtonsManager.bet.text(monney);
 
 			return this;
 		}
 
 		return {
+			takeAllBets,
 			getBet,
 			setBet,
+			setBetIndex,
+			getBetIndex,
 			betUp,
 			betDown,
-			setElement,
 			changeElementValue
 		};
 	}());
@@ -279,9 +269,9 @@
 				}else{
 					setTimeout(function(){
 						if(Amount.getAmount() < 5){
-							$('#spin').removeClass('active').addClass('disabled');
+							ButtonsManager.disable('spin');
 						}else{
-							$('#spin').removeClass('disabled').addClass('active');
+							ButtonsManager.activate('spin');
 						}
 
 					}, 3500);
@@ -328,11 +318,17 @@
 
 							const incoming_cash = (Animator.anyWining(grid)) * Bet.getBet();
 
-							Amount.setAmount(Amount.getAmount() + incoming_cash);
-							Amount.changeElementValue(Amount.getAmount(), true);
+							Amount.add(incoming_cash);
+							Amount.changeElementValue(Amount.getAmount());
 							Animator.linghtWiningImages(grid.wining_ids);
+							
 							if(incoming_cash !== 0){
 								Animator.displayFreshCash(incoming_cash);
+							}
+
+							if(ButtonsManager.isDisabled('bet-up') && Amount.getAmount() >= 5){
+								ButtonsManager.activate('bet-up');
+								ButtonsManager.activate('spin');
 							}
 
 							grid.rows.first = [];
@@ -641,18 +637,16 @@
 		};
 	})();
 
-	Bet.setElement('#bet');
-	Amount.setElement('#amount');
-
-	$('#spin').click(function(e){
+	ButtonsManager.spin.click(function(e){
 		
 		e.preventDefault();
 
 		if(Amount.getAmount() >= 5){
 			
+			Amount.substract(Bet.getBet());
 			Amount.changeElementValue(Bet.getBet());
 
-			$(this).removeClass('active').addClass('disabled');
+			ButtonsManager.disable('spin');
 
 			Animator.spin();
 
@@ -660,7 +654,7 @@
 
 	});
 
-	$('#bet-up').click(function(e){
+	ButtonsManager.betUp.click(function(e){
 		
 		e.preventDefault();
 
@@ -668,12 +662,12 @@
 
 	});
 
-	$('#bet-down').click(function(e){
+	ButtonsManager.betDown.click(function(e){
 		
 		e.preventDefault();
 
 		Bet.betDown();
 
 	});
-
+	//todo: return main object with methods and provide chaining for life-cikle for 1 game!
 })(jQuery);
