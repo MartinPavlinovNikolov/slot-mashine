@@ -302,14 +302,14 @@ const SlotMashine = (function($){
 
 		function setCacheIncomingCash(cash){
 
-			this.incoming_cash = cash;
+			incoming_cash = cash;
 
 			return this;
 		}
 
 		function getCacheIncomingCash(){
 
-			return this.incoming_cash;
+			return incoming_cash;
 		}
 
 		return {
