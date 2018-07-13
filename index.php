@@ -18,7 +18,7 @@
 				<?php
 				for($i = 0;$i < 5; $i++){
 
-					echo "<li class='slot-row'><ul>";
+					echo "<li class='slot-row'><div id='stopper" . ($i+1) . "''></div><ul>";
 
 					for($j = 0;$j <= 4; $j++){
 						echo "<li id='row-" . ($j) . "-col-" . ($i+1) . "'><img src='images/" . rand(1, 6) . ".png'></img></li>";

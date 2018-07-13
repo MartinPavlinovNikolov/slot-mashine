@@ -26,6 +26,14 @@ const SlotMashine = (function($){
 		})
 	};
 
+	const Stopper = {
+		'aboveFirstRow': $('#stopper1').position().top,
+		'firstRow': $('#stopper2').position().top,
+		'secondRow': $('#stopper3').position().top,
+		'thirdRow': $('#stopper4').position().top,
+		'bottom': $('#stopper5').position().top
+	};
+
 	const ButtonsManager = (function(){
 
 		setElement('bet', 'bet');
@@ -326,11 +334,6 @@ const SlotMashine = (function($){
 	}());
 
 	const Animator = (function(){
-		
-		const config = {
-			'image_starting_point': '-33%',
-			'image_moving_point': '400'
-		};
 
 		const grid = {
 			'rows': {
@@ -387,9 +390,9 @@ const SlotMashine = (function($){
 					top: movementDown,
 				}, 130, function(){
 					that.setPositions($('#' + that.element.prop('id')).position().top, $('#' + that.element.prop('id')).position().left);
-					if(that.position.top > config.image_moving_point){
+					if(that.position.top > 400){
 						
-						that.element.css({top: config.image_starting_point});
+						that.element.css({top: Stopper.aboveFirstRow});
 						that.element.children().remove();
 						that.element.append("<img src='images/" + Math.ceil(Math.random()*Math.ceil(6)) + ".png'></img>");
 					}
@@ -400,13 +403,13 @@ const SlotMashine = (function($){
 						let img_number = that.element.children().first().prop('src').substr(-5, 1);
 						let id = that.element.prop('id');
 
-						if(that.position.top > 266 && that.position.top < 400){
+						if(that.position.top > (Stopper.thirdRow - 50) && that.position.top < (Stopper.bottom - 50)){
 							grid.rows.third.push(img_number);
 							grid.ids.third.push(id);
-						}else if(that.position.top > 133 && that.position.top < 200){
+						}else if(that.position.top > (Stopper.secondRow - 50) && that.position.top < (Stopper.thirdRow - 50)){
 							grid.rows.second.push(img_number);
 							grid.ids.second.push(id);
-						}else if(that.position.top > -1 && that.position.top < 120){
+						}else if(that.position.top > (Stopper.firstRow - 50) && that.position.top < (Stopper.secondRow - 50)){
 							grid.rows.first.push(img_number);
 							grid.ids.first.push(id);
 						}
@@ -719,7 +722,6 @@ const SlotMashine = (function($){
 		})();
 
 		return {
-			config,
 			spin,
 			Rows,
 			colectLines,
