@@ -9,6 +9,8 @@ button, p {
 #main-container {
 	margin: 0 auto;
 	width: 90%;
+	perspective: 1000px;
+	transform-style: preserve-3d;
 }
 
 #slot-mashine, #screen {
@@ -19,6 +21,7 @@ button, p {
 	width: 90%;
 	height: 400px;
 }
+
 #screen {
 	border-bottom: 3px solid black;
 	overflow: hidden;
@@ -28,11 +31,21 @@ button, p {
 	border-radius: 15px 15px 0 0;
 	padding: 20px;
 	background-color: brown;
+	transform: rotateX(20deg);
+	transform-origin: bottom;
 }
 
 #screen {
 	border-radius: 10px;
 	background-color: blue;
+}
+
+#blur{
+	position: absolute;
+	width: 87%;
+	height: 400px;
+    box-shadow: inset 0 0 99px 13px black;
+    z-index: 99999;
 }
 
 #screen>ul {
@@ -70,14 +83,15 @@ button, p {
 	box-sizing: border-box;
 	width: 20%;
 	height: 400px;
-	margin: 0;
+	margin: -35px 0 0 0;
 	padding: 0;
 	list-style: none;
 	text-align: center;
-	border: 1px solid black;
 }
 
-#row-0-col-1, #row-0-col-2, #row-0-col-3, #row-0-col-4, #row-0-col-5,#row-1-col-1, #row-1-col-2, #row-1-col-3, #row-1-col-4, #row-1-col-5, #row-2-col-1, #row-2-col-2, #row-2-col-3, #row-2-col-4, #row-2-col-5, #row-3-col-1, #row-3-col-2, #row-3-col-3, #row-3-col-4, #row-3-col-5, {
+img {
+	border-left: 1px solid black;
+	border-right: 1px solid black;
 }
 
 #row-0-col-1 {

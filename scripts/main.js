@@ -389,6 +389,7 @@ const SlotMashine = (function($){
 				that.element.animate({
 					top: movementDown,
 				}, 130, function(){
+
 					that.setPositions($('#' + that.element.prop('id')).position().top, $('#' + that.element.prop('id')).position().left);
 					if(that.position.top > 400){
 						
