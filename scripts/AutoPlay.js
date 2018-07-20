@@ -5,7 +5,7 @@ const AutoPlay = (function(){
     play();
     
     ButtonsManager.autoPlay.off();
-    ButtonsManager.autoPlay.click(function(e){
+    ButtonsManager.autoPlay.focusout(function(e){
       AutoPlay.stop();
     });
 

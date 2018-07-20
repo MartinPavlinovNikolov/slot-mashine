@@ -2,6 +2,28 @@ const SlotMashine = (function($){
   
   function setGame(){
 
+    function animateSpining(){
+      
+      return new Promise((resolve, reject) => {
+
+        ButtonsManager.disable('spin');
+        ButtonsManager.disable('bet-up');
+        ButtonsManager.disable('bet-down');
+        ButtonsManager.disable('min-bet');
+        ButtonsManager.disable('max-bet');
+
+        Amount.substract(Bet.getBet());
+        ButtonsManager.changeElementValue('amount', Amount.getAmount());
+
+        Animator.spin();
+        
+        setTimeout(() => {
+            resolve();
+          }, TimeMaster.animate_spining);
+        });
+
+    }
+
     ButtonsManager.spin.click(function(e){
       
       e.preventDefault();
@@ -10,29 +32,10 @@ const SlotMashine = (function($){
 
         ButtonsManager.wasCliked('spin');
         
-        let animate_spining = () => {
-          return new Promise((resolve, reject) => {
-
-            ButtonsManager.disable('spin');
-            ButtonsManager.disable('bet-up');
-            ButtonsManager.disable('bet-down');
-            ButtonsManager.disable('min-bet');
-            ButtonsManager.disable('max-bet');
-
-            Amount.substract(Bet.getBet());
-            ButtonsManager.changeElementValue('amount', Amount.getAmount());
-
-            Animator.spin();
-            
-            setTimeout(() => {
-              resolve();
-            }, TimeMaster.animate_spining);
+        animateSpining()
+          .then(() => {
+            ButtonsManager.afterSpin();
           });
-        };
-        
-        animate_spining().then(() => {
-          ButtonsManager.afterSpin();
-        });
 
       }
 

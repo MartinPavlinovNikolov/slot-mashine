@@ -1,4 +1,4 @@
-const Amount = (function(ButtonsManager){
+const Amount = (function(){
 
   let _value = Number(ButtonsManager.amount.text()) * 100;
 
@@ -29,4 +29,4 @@ const Amount = (function(ButtonsManager){
     setAmount
   }
 
-})(ButtonsManager);
+})();

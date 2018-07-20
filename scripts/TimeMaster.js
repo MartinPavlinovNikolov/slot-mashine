@@ -4,7 +4,7 @@ const TimeMaster = {
   'linghtWiningImages': 1800,
   'displayFreshCash': 1800,
   'start': 6000,
-  'animate_spining': 4450,
+  'animate_spining': 5000,
   'iterations': 20,
   'speedUp': (function(){
     this.spin = 40;
@@ -19,7 +19,7 @@ const TimeMaster = {
     this.linghtWiningImages = 1800;
     this.displayFreshCash = 1800;
     this.start = 6000;
-    this.animate_spining = 4450;
+    this.animate_spining = 5000;
     this.iterations = 20;
   })
 };
