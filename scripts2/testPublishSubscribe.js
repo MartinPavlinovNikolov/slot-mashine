@@ -86,32 +86,6 @@ window.addEventListener('load', function(){
     }
   };
 
-  function Timer (interval){
-
-    let self = this;
-    let timer_id;
-
-    self.setInterval = function(newInterval){
-      interval = newInterval;
-    };
-
-    self.start = function(){
-      if(!timer_id){
-        timer_id = setInterval(self.publish(new Date()), interval);
-      }
-    };
-
-    self.stop = function(){
-      if(timer_id){
-        clearInterval(timer_id);
-        timer_id = 0;
-      }
-    };
-
-  }
-
-  Timer.extend(Publisher);
-
   function Person(name, age){
     let self = this;
 
@@ -124,19 +98,6 @@ window.addEventListener('load', function(){
   }
 
   Person.extend(Publisher);
-
-  var t1 = new Timer(1000);
-  t1.subscribe(function(data){console.log("t1 1: "+data)});
-  t1.subscribe(function(data){console.log("t1 2: "+data)});
-  t1.subscribe(function(data){console.log("t1 3: "+data)});
-  t1.start();
-
-  var t2 = new Timer(1500);
-  t2.subscribe(function(data){console.log("t2 1: "+data)});
-  t2.subscribe(function(data){console.log("t2 2: "+data)});
-  t2.subscribe(function(data){console.log("t2 3: "+data)});
-  t2.subscribe(function(data){console.log("t2 4: "+data)});
-  t2.start();
 
   const person = new Person("Peter", 15);
   person.subscribe(function(data){

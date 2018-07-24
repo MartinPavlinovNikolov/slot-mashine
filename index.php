@@ -64,16 +64,7 @@
     </div><!--control-pult END-->
 
     <script src="scripts/jQuery.js"></script>
-    <script src="scripts/TimeMaster.js"></script>
-    <script src="scripts/Stopper.js"></script>
-    <script src="scripts/ButtonMenager.js"></script>
-    <script src="scripts/Amount.js"></script>
-    <script src="scripts/Bet.js"></script>
-    <script src="scripts/Grid.js"></script>
-    <script src="scripts/Koeficient.js"></script>
-    <script src="scripts/Rows.js"></script>
-    <script src="scripts/Animator.js"></script>
-    <script src="scripts/AutoPlay.js"></script>
+    <script src="scripts/Config.js"></script>
     <script src="scripts/SlotMashine.js"></script>
     <script src="scripts/main.js"></script>
 
