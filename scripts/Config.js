@@ -32,12 +32,27 @@ var SlotMashine = SlotMashine || {};
       'timeControll': {
         'animateOnButtonClick': 200,
         'rotateNextColumn': 200,
+        'spinWiningImages': 1800,
         'displayFreshCash': 1800,
         'autoPlayStart': 6000,
         'sumOfAllAnimationsPerSpin': 5000
       },
+      'grid': {
+        'rows': {
+          'first': [],
+          'second': [],
+          'third': []
+        },
+        'ids': {
+          'first': [],
+          'second': [],
+          'third': []
+        },
+        'winingIds': []
+      },
       'spiningAnimationsIterations': 20,
-      'autoPlayOn': false
+      'autoPlayOn': false,
+      'incoming_cash': 0
     },
     '_settings': {
       'elements': {
@@ -57,8 +72,7 @@ var SlotMashine = SlotMashine || {};
           'thirdRow': 'stopper4',
           'bottom': 'stopper5'
         }
-      },
-      'incoming_cash': 0
+      }
     },
     'options': options,
     'settings': settings,

@@ -65,6 +65,10 @@
 
     <script src="scripts/jQuery.js"></script>
     <script src="scripts/Config.js"></script>
+    <script src="scripts/Buttons.js"></script>
+    <script src="scripts/Amount.js"></script>
+    <script src="scripts/Bet.js"></script>
+    <script src="scripts/AutoPlay.js"></script>
     <script src="scripts/SlotMashine.js"></script>
     <script src="scripts/main.js"></script>
 
