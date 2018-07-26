@@ -35,9 +35,13 @@ var SlotMashine = SlotMashine || {};
         'spinWiningImages': 1800,
         'displayFreshCash': 1800,
         'autoPlayStart': 6000,
-        'sumOfAllAnimationsPerSpin': 5000
+        'sumOfAllAnimationsPerSpin': 5000,
+        'movementDown': 130,
+        'afterSpining': 10000
       },
       'grid': {
+        'colsNumber': 5,
+        'rowsNumber': 5,
         'rows': {
           'first': [],
           'second': [],
@@ -48,11 +52,13 @@ var SlotMashine = SlotMashine || {};
           'second': [],
           'third': []
         },
-        'winingIds': []
+        'winingIds': [],
+        'lastAnimatedElementId': 'row-1-col-5'
       },
       'spiningAnimationsIterations': 20,
       'autoPlayOn': false,
-      'incoming_cash': 0
+      'incoming_cash': 0,
+      'screenHeigth': 400
     },
     '_settings': {
       'elements': {

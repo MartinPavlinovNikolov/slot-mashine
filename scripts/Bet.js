@@ -6,14 +6,7 @@ var SlotMashine = SlotMashine || {};
   }
 
   function setBet(bet){
-
-    module.config.options().bets.all.findIndex(b => {
-      if(b === bet){
-        module.config.options().bets.current_bet_index = module.config.options().bets.all.indexOf(b);
-      }
-      return false;
-    });
-
+    _setBetIndex(module.config.options().bets.all.findIndex(b => {return b===bet}));
     return this;
   }
 
@@ -58,4 +51,5 @@ var SlotMashine = SlotMashine || {};
     module.betDown = betDown;
     module.setCacheIncomingCash = setCacheIncomingCash;
     module.getCacheIncomingCash = getCacheIncomingCash;
+    
 }(SlotMashine));

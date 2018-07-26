@@ -5,24 +5,21 @@ var SlotMashine = SlotMashine || {};
   const AutoPlay = (function(){
 
     function start(){
-      
       play();
-      
       module.buttons.autoPlay.off();
       AutoPlay.is_auto_play = true;
-      module.buttons.autoPlay.focusout(function(e){
-        module.stop();
+      module.buttons.autoPlay.on('focusout click', function(e){
+        module.autoPlay.stop();
       });
     }
 
     function stop(){
-      module.activate('auto-play');
+      module.activate('autoPlay');
       module.config.options().is_auto_play = false;
-
       module.buttons.autoPlay.off();
       module.buttons.autoPlay.click(function(e){
-        module.disable('auto-play');
-        module.start();
+        module.disable('autoPlay');
+        module.autoPlay.start();
       });
     }
 

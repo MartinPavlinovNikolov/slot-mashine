@@ -36,30 +36,30 @@ var SlotMashine = SlotMashine || {};
 
   function wasCliked(element){
     
-    if(element.hasClass('active')){
-      element.removeClass('active').addClass('click');
+    if(module.buttons[element].hasClass('active')){
+      module.buttons[element].addClass('click');
       setTimeout(() => {
-        element.removeClass('click').addClass('active')}, module.config.options().timeControll.animateOnButtonClick);
+        module.buttons[element].removeClass('click')}, module.config.options().timeControll.animateOnButtonClick);
       }
     return this;
   }
 
   function disable(element){
-    element.removeClass('active').addClass('disabled');
+    module.buttons[element].removeClass('active').addClass('disabled');
     return this;
   }
 
   function activate(element){
-    element.removeClass('disabled').addClass('active');
+    module.buttons[element].removeClass('disabled').addClass('active');
     return this;
   }
 
   function isActive(element){
-    return element.hasClass('active');
+    return module.buttons[element].hasClass('active');
   }
 
   function isDisabled(element){
-    return element.hasClass('disabled');
+    return module.buttons[element].hasClass('disabled');
   }
 
   function _setElements(colection){
@@ -77,79 +77,71 @@ var SlotMashine = SlotMashine || {};
   }
 
   function afterBetUp(){
-    /*
-    if(Amount.getAmount() < (Bet.takeAllBets()[Bet.getBetIndex()+1]) || Bet.getBet() === 2000){
-      this.disable('bet-up');
+    if(module.getAmount() < (module.takeAllBets()[module.config.options().bets.current_bet_index+1]) || module.getBet() === 2000){
+      module.disable('betUp');
     }
-
-    if(Bet.getBet() === 10 || Amount.getAmount() >= (Bet.takeAllBets()[Bet.getBetIndex()+1])){
-      this.activate('bet-down');
+    if(module.getBet() === 10 || module.getAmount() >= (module.takeAllBets()[module.config.options().bets.current_bet_index+1])){
+      module.activate('betDown');
     }
-
-    return this;*/
+    return this;
   }
 
   function afterBetDown (){
-    
-    /*if(Bet.getBet() === 5){
-      this.disable('bet-down');
+    if(module.getBet() === 5){
+      module.disable('betDown');
     }
-
-    if(Bet.getBet() === 1600){
-      this.activate('bet-up');
+    if(module.getBet() === 1600){
+      module.activate('betUp');
     }
-
-    if(Bet.getBet() <= Amount.getAmount()){
-      this.activate('bet-up');
+    if(module.getBet() <= module.getAmount()){
+      module.activate('betUp');
     }
-
-    return this;*/
+    return this;
   }
 
   function afterSpin(){
 
-    /*let incoming_cash = Bet.getCacheIncomingCash();
+    let incoming_cash = module.getCacheIncomingCash();
 
-    Amount.add(incoming_cash);
+    module.add(incoming_cash);
+    module.changeElementValue('amount', module.getAmount());
 
-    this.changeElementValue('amount', Amount.getAmount());
-
-    if(Amount.getAmount() >= 10){
-      this.activate('bet-up');
-      this.activate('bet-down');
-      this.activate('min-bet');
+    if(module.getAmount() >= 10){
+      module.activate('betUp');
+      module.activate('betDown');
+      module.activate('minBet');
     }
 
-    if(Amount.getAmount() >= 10 && Amount.getAmount() >= Bet.takeAllBets()[Bet.getBetIndex()+1]){
-      this.activate('max-bet');
+    if(module.getAmount() >= 10 && module.getAmount() >= module.takeAllBets()[module.config.options().bets.current_bet_index + 1]){
+      module.activate('maxBet');
     }
 
-    if(Amount.getAmount() < 5){
-      this.disable('spin');
+    if(module.getAmount() < 5){
+      module.disable('spin');
     }else{
-      this.activate('spin');
+      module.activate('spin');
     }
 
-    if(Amount.getAmount() < Bet.getBet()){
-      Bet.setBet(5).setBetIndex(0);
-      this.changeElementValue('bet', 5);
+    if(module.getAmount() < module.getBet()){
+      module.setBet(5);
+      module.changeElementValue('bet', 5);
 
-      if(Amount.getAmount() > Bet.getBet()){
-        this.activate('bet-up');
-        this.activate('max-bet');
+      if(module.getAmount() > module.getBet()){
+        module.activate('betUp');
+        module.activate('maxBet');
       }
     }
 
-    if(Bet.getBet() === 2000){
-      this.disable('bet-up');
-      this.disable('max-bet');
+    if(module.getBet() === 2000){
+      module.disable('betUp');
+      module.disable('maxBet');
     }
 
-    if(Bet.getBet() === 5){
-      ButtonsManager.disable('bet-down');
+    if(module.getBet() === 5){
+      module.disable('betDown');
     }
 
-    return this;*/
+    return this;
   }
 
   function changeElementValue(target, monney){
