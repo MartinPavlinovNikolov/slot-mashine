@@ -6,12 +6,40 @@ body {
 button, p {
   font-style: italic;
 }
+button {
+  box-shadow: -4px 5px 0 0 black;
+  transition: all ease-in-out 100ms;
+}
 
 #main-container {
   margin: 0 auto;
-  width: 90%;
+  width: 80%;
   perspective: 1000px;
   transform-style: preserve-3d;
+}
+
+#control-pult {
+  position: relative;
+  transform: perspective(800px) rotateX(30deg);
+  transform-origin: top;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border: 3px solid black;
+  margin: 0 auto;
+  width: 90%;
+  height: 150px;
+  background-color: brown;
+}
+
+#corpus-front-cover {
+  background-color: brown;
+  width: 87.5%;
+  height: 70vh;
+  border-left: 3px solid black;
+  border-right: 3px solid black;
+  border-bottom: 3px solid black;
+  margin: 20px auto 0;
 }
 
 #slot-mashine, #screen {
@@ -30,7 +58,8 @@ button, p {
 
 #slot-mashine {
   border-radius: 15px 15px 0 0;
-  padding: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   background-color: brown;
   transform: rotateX(20deg);
   transform-origin: bottom;
@@ -43,7 +72,7 @@ button, p {
 
 #blur{
   position: absolute;
-  width: 87%;
+  width: 90%;
   height: 400px;
   box-shadow: inset 0 0 99px 13px black;
   z-index: 99999;
@@ -224,18 +253,6 @@ img {
   height: 100%;
 }
 
-#control-pult {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  border: 3px solid black;
-  border-radius: 40px;
-  margin: 0 auto;
-  width: 90%;
-  height: 150px;
-  background-color: brown;
-}
-
 #amount-container, #bet-container, #spin-container {
   width: 80%;
   height: 80%;
@@ -281,16 +298,16 @@ label {
   border: 3px solid black;
   border-radius: 20px;
   display: block;
-  width: 25%;
-  height: 20px;
+  width: 35%;
+  height: 28px;
   font-size: 10px;
   color: white;
 }
 #max-bet{
-  margin: 2% 20% 2% 5%;
+  margin: 2% 10% 2% 5%;
 }
 #min-bet{
-  margin: 2% 5% 2% 20%;
+  margin: 2% 5% 2% 10%;
 }
 
 #speed {

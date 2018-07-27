@@ -36,11 +36,25 @@ var SlotMashine = SlotMashine || {};
 
   function wasCliked(element){
     
+    module.buttons[element].css({
+      "transform": "translateX(-4px) translateY(5px)",
+      "box-shadow": "0 0 0 0 black"
+    });
+
     if(module.buttons[element].hasClass('active')){
       module.buttons[element].addClass('click');
       setTimeout(() => {
-        module.buttons[element].removeClass('click')}, module.config.options().timeControll.animateOnButtonClick);
-      }
+        module.buttons[element].removeClass('click')
+      }, module.config.options().timeControll.animateOnButtonClick);
+    }
+
+    setTimeout(() => {
+      module.buttons[element].css({
+        "transform": "translateX(0) translateY(0)",
+        "box-shadow": "-4px 5px 0 0 black"
+      });
+    }, 100);
+
     return this;
   }
 

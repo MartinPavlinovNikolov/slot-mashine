@@ -33,35 +33,37 @@
                 </ul>
             </div><!-- screen END -->
         </div><!-- slot-mashine corpus END -->
+        <div id="control-pult"><!--control-pult START-->
+
+            <div id="amount-container">
+                <label for="amount">Amount:</label>
+                <div id="amount-controls">
+                    <p id="amount">20.00</p>
+                </div>
+            </div>
+
+            <div id="bet-container">
+                <label for="bet">BET:</label>
+                <div id="bet-controls">
+                    <p id="bet">00.05</p>
+                    <button id="bet-down" class="disabled">DOWN</button>
+                    <button id="bet-up" class="active">UP</button>
+                    <button id="min-bet" class="disabled">MIN-BET</button>
+                    <button id="max-bet" class="active">MAX-BET</button>
+                </div>
+            </div>
+
+            <div id="spin-container">
+                <button id="speed">Speed Up</button>
+                <button id="spin" class="active">SPIN</button>
+                <button id="auto-play" class="active">Auto-Play</button>
+            </div>
+
+        </div><!--control-pult END-->
+
+
     </div><!--main-container END-->
-
-    <div id="control-pult"><!--control-pult START-->
-
-        <div id="amount-container">
-            <label for="amount">Amount:</label>
-            <div id="amount-controls">
-                <p id="amount">20.00</p>
-            </div>
-        </div>
-
-        <div id="bet-container">
-            <label for="bet">BET:</label>
-            <div id="bet-controls">
-                <p id="bet">00.05</p>
-                <button id="bet-down" class="disabled">DOWN</button>
-                <button id="bet-up" class="active">UP</button>
-                <button id="min-bet" class="disabled">MIN-BET</button>
-                <button id="max-bet" class="active">MAX-BET</button>
-            </div>
-        </div>
-
-        <div id="spin-container">
-            <button id="speed">Speed Up</button>
-            <button id="spin" class="active">SPIN</button>
-            <button id="auto-play" class="active">Auto-Play</button>
-        </div>
-
-    </div><!--control-pult END-->
+    <div id="corpus-front-cover"></div>
 
     <script src="scripts/jQuery.js"></script>
     <script src="scripts/Config.js"></script>
