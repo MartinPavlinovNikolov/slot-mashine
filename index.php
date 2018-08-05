@@ -13,24 +13,6 @@
     <div id="main-container"><!--main-container START-->
         <div id="slot-mashine"><!-- slot-mashine corpus START -->
             <div id="screen"><!-- screen START -->
-                <div id="blur"></div>
-                <ul>
-
-                    <?php
-                    for($i = 0;$i < 5; $i++){
-
-                        echo "<li class='slot-row'><div id='stopper" . ($i+1) . "'></div><ul>";
-
-                        for($j = 0;$j <= 4; $j++){
-                            echo "<li id='row-" . ($j) . "-col-" . ($i+1) . "'><img src='images/" . rand(1, 6) . ".png'></img></li>";
-                        }
-
-                        echo "</ul></li>";
-
-                    }
-                    ?>
-
-                </ul>
             </div><!-- screen END -->
         </div><!-- slot-mashine corpus END -->
         <div id="control-pult"><!--control-pult START-->
@@ -38,14 +20,14 @@
             <div id="amount-container">
                 <label for="amount">Amount:</label>
                 <div id="amount-controls">
-                    <p id="amount">20.00</p>
+                    <p id="amount"></p>
                 </div>
             </div>
 
             <div id="bet-container">
                 <label for="bet">BET:</label>
                 <div id="bet-controls">
-                    <p id="bet">00.05</p>
+                    <p id="bet"></p>
                     <button id="bet-down" class="disabled">DOWN</button>
                     <button id="bet-up" class="active">UP</button>
                     <button id="min-bet" class="disabled">MIN-BET</button>
@@ -61,19 +43,20 @@
 
         </div><!--control-pult END-->
 
-
     </div><!--main-container END-->
     <div id="corpus-front-cover"></div>
 
     <script src="scripts/jQuery.js"></script>
+    <script src="scripts/CustomEvent.js"></script>
     <script src="scripts/Config.js"></script>
     <script src="scripts/Buttons.js"></script>
     <script src="scripts/Amount.js"></script>
     <script src="scripts/Bet.js"></script>
     <script src="scripts/AutoPlay.js"></script>
     <script src="scripts/Rows.js"></script>
+    <script src="scripts/Screen.js"></script>
     <script src="scripts/SlotMashine.js"></script>
     <script src="scripts/main.js"></script>
-
+    
 </body>
 </html>

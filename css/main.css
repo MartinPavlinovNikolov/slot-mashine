@@ -52,6 +52,12 @@ button {
 }
 
 #screen {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background-color: orange;
   border-bottom: 3px solid black;
   overflow: hidden;
 }
@@ -63,24 +69,6 @@ button {
   background-color: brown;
   transform: rotateX(20deg);
   transform-origin: bottom;
-}
-
-#screen {
-  border-radius: 10px;
-  background-color: blue;
-}
-
-#blur{
-  position: absolute;
-  width: 90%;
-  height: 400px;
-  box-shadow: inset 0 0 99px 13px black;
-  z-index: 99999;
-}
-
-#screen>ul {
-  margin: 0;
-  padding: 0;
 }
 
 #stopper1, #stopper2, #stopper3, #stopper4, #stopper5 {

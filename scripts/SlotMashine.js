@@ -2,22 +2,26 @@ var SlotMashine = SlotMashine || {};
 
 (function($, module){
 
+  module.on('animateRellsStart', function(data){
+    module.disable('spin');
+    module.disable('betUp');
+    module.disable('betDown');
+    module.disable('minBet');
+    module.disable('maxBet');
+    module.substract(module.getBet());
+    module.changeElementValue('amount', module.getAmount());
+  });
+
   function setGame(){
+
+    module.loadScreen();
+    module.setKeyFrame();
 
     function animateSpining(){
       return new Promise((resolve, reject) => {
-        module.disable('spin');
-        module.disable('betUp');
-        module.disable('betDown');
-        module.disable('minBet');
-        module.disable('maxBet');
-        module.substract(module.getBet());
-        module.changeElementValue('amount', module.getAmount());
-        module.spin();
-        setTimeout(() => {
-            resolve();
-          }, module.config.options().timeControll.afterSpining);
-        });
+        module.setKeyFrame();
+        module.animateRellsStart(resolve);
+      });
     }
 
     module.buttons.spin.click(function(e){

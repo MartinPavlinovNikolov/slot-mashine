@@ -154,7 +154,6 @@ var SlotMashine = SlotMashine || {};
     if(module.getBet() === 5){
       module.disable('betDown');
     }
-
     return this;
   }
 

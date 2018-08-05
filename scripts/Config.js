@@ -37,7 +37,9 @@ var SlotMashine = SlotMashine || {};
         'autoPlayStart': 6000,
         'sumOfAllAnimationsPerSpin': 5000,
         'movementDown': 130,
-        'afterSpining': 10000
+        'afterSpining': 10000,
+        'forOneFullSpinPerRell': 5,
+        'delayBetweenRellsSpins': 200
       },
       'grid': {
         'colsNumber': 5,
@@ -58,7 +60,10 @@ var SlotMashine = SlotMashine || {};
       'spiningAnimationsIterations': 20,
       'autoPlayOn': false,
       'incoming_cash': 0,
-      'screenHeigth': 400
+      'screenHeigth': 400,
+      'keyFrameStart': '-100',
+      'keyFrameEnd': '-400',
+      'translateZ': 0
     },
     '_settings': {
       'elements': {
@@ -78,7 +83,11 @@ var SlotMashine = SlotMashine || {};
           'thirdRow': 'stopper4',
           'bottom': 'stopper5'
         }
-      }
+      },
+      'rells': 5,
+      'imagesPerRell': 36,
+      'perspectiveOrigins': ["250%", "150%", "50%", "-50%", "-150%"],
+      'rellsZIndexes': [10, 20, 50, 40, 30]
     },
     'options': options,
     'settings': settings,
