@@ -53,7 +53,6 @@
     <script src="scripts/Amount.js"></script>
     <script src="scripts/Bet.js"></script>
     <script src="scripts/AutoPlay.js"></script>
-    <script src="scripts/Rows.js"></script>
     <script src="scripts/Screen.js"></script>
     <script src="scripts/Wins.js"></script>
     <script src="scripts/SlotMashine.js"></script>

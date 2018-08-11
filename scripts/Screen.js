@@ -104,10 +104,6 @@ var SlotMashine = SlotMashine || {};
       "top": "0"
     });
 
-    for(q = 1; q <= 4; q++){
-      $('#screen').append(`<div id="stopper${q}" style="position:absolute;top:${(imgHeight*q)-imgHeight}px;"></div>`);
-    }
-
     return module;
   }
 
@@ -133,13 +129,9 @@ var SlotMashine = SlotMashine || {};
               "animation": ''
             });
           }
-          //todo: check for winings
-          const winingMock = 2000;
-          if(winingMock > 0){
-            module.activateWiningImages();
-          }else{
-            module.publish('animateRellsEnd');
-          }
+
+          module.checkForWiningLines();
+
         }, module.config.options().timeControll.forOneFullSpinPerRell*1000+1500);
       }
 
@@ -149,6 +141,7 @@ var SlotMashine = SlotMashine || {};
   }
 
   function replaceImagesInSpiningRellsAnimation(element, time){
+    
     setTimeout(()=>{
       $(element).each(function(){
         let newImgSRC = "./images/"+(Math.floor(Math.random() * (6) + 1))+".png";
@@ -158,7 +151,11 @@ var SlotMashine = SlotMashine || {};
         newImgSRC = "./images/"+(Math.floor(Math.random() * (6) + 1))+".png";
         $(this.lastElementChild).attr('src', newImgSRC);
       });
+
+      module.setImages(element);
+
     }, time);
+
     return module;
   }
   

@@ -27,7 +27,7 @@ var SlotMashine = SlotMashine || {};
           '5': 1.2,
           '6': 1.4
         },
-        'current': 0
+        'current': 1
       },
       'timeControll': {
         'animateOnButtonClick': 200,
@@ -35,20 +35,9 @@ var SlotMashine = SlotMashine || {};
         'delayBetweenRellsSpins': 200
       },
       'grid': {
-        'colsNumber': 5,
-        'rowsNumber': 5,
-        'rows': {
-          'first': [],
-          'second': [],
-          'third': []
-        },
-        'ids': {
-          'first': [],
-          'second': [],
-          'third': []
-        },
+        'cells': [[], [], []],
         'winingIds': [],
-        'lastAnimatedElementId': 'row-1-col-5'
+        'ids': []
       },
       'autoPlayOn': false,
       'incoming_cash': 0,
@@ -68,14 +57,7 @@ var SlotMashine = SlotMashine || {};
         'maxBet': 'max-bet',
         'minBet': 'min-bet',
         'autoPlay': 'auto-play',
-        'speed': 'speed',
-        'stoppers': {
-          'aboveFirstRow': 'stopper1',
-          'firstRow': 'stopper2',
-          'secondRow': 'stopper3',
-          'thirdRow': 'stopper4',
-          'bottom': 'stopper5'
-        }
+        'speed': 'speed'
       },
       'rells': 5,
       'imagesPerRell': 36,
