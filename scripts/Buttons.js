@@ -4,27 +4,20 @@ var SlotMashine = SlotMashine || {};
 
   const time = (function(){
     function speedUp(){
-      module.config.options().spiningAnimationsIterations = 8;
       module.config.options({
         'timeControll': {
-          'rotateNextColumn': 200,
-          'spinWiningImages': 800,
-          'displayFreshCash': 800,
-          'autoPlayStart': 3000,
-          'sumOfAllAnimationsPerSpin': 1850
+        'forOneFullSpinPerRell': 1,
+        'delayBetweenRellsSpins': 100
         }
       });
     }
 
     function slowDown(){
-      module.config.options().spiningAnimationsIterations = 20;
       module.config.options({
         'timeControll': {
-          'rotateNextColumn': 200,
-          'spinWiningImages': 1800,
-          'displayFreshCash': 1800,
-          'autoPlayStart': 6000,
-          'sumOfAllAnimationsPerSpin': 5000
+        'animateOnButtonClick': 200,
+        'forOneFullSpinPerRell': 5,
+        'delayBetweenRellsSpins': 200
         }
       });
     }
@@ -34,29 +27,22 @@ var SlotMashine = SlotMashine || {};
     };
   })();
 
-  function wasCliked(element){
-    
-    module.buttons[element].css({
-      "transform": "translateX(-4px) translateY(5px)",
-      "box-shadow": "0 0 0 0 black"
-    });
-
-    if(module.buttons[element].hasClass('active')){
-      module.buttons[element].addClass('click');
-      setTimeout(() => {
-        module.buttons[element].removeClass('click')
-      }, module.config.options().timeControll.animateOnButtonClick);
-    }
-
-    setTimeout(() => {
-      module.buttons[element].css({
-        "transform": "translateX(0) translateY(0)",
-        "box-shadow": "-4px 5px 0 0 black"
+  (function(){
+    $('body').on('click', 'button', function(e){
+      e.preventDefault();
+      const that = this;
+      $(that).css({
+        'transform': 'translateX(-4px) translateY(5px)',
+        'box-shadow': '0 0 0 0 black'
       });
-    }, 100);
-
-    return this;
-  }
+      setTimeout(function(){
+        $(that).css({
+          'transform': 'translateX(0) translateY(0)',
+          'box-shadow': '-4px 5px 0 0 black'
+        });
+      }, 100);
+    })
+  })();
 
   function disable(element){
     module.buttons[element].removeClass('active').addClass('disabled');
@@ -91,73 +77,44 @@ var SlotMashine = SlotMashine || {};
   }
 
   function afterBetUp(){
-    if(module.getAmount() < (module.takeAllBets()[module.config.options().bets.current_bet_index+1]) || module.getBet() === 2000){
+
+    //do not have monney for bigger bet?
+    if(module.getAmount() < (module.takeAllBets()[module.config.options().bets.current_bet_index+1]) || module.getBet() === module.takeAllBets()[module.takeAllBets().length - 1]){
       module.disable('betUp');
+      module.disable('maxBet');
     }
-    if(module.getBet() === 10 || module.getAmount() >= (module.takeAllBets()[module.config.options().bets.current_bet_index+1])){
+
+    //the bet is second posible bet or monney are at least next bet value?
+    if(module.getBet() === module.takeAllBets()[1] || module.getAmount() >= (module.takeAllBets()[module.config.options().bets.current_bet_index+1])){
       module.activate('betDown');
+      module.activate('minBet');
     }
     return this;
   }
 
   function afterBetDown (){
+
+    //is it minimum bet?
     if(module.getBet() === 5){
       module.disable('betDown');
+      module.disable('minBet');
     }
-    if(module.getBet() === 1600){
+
+    //the bet is last before posible default-max bet?
+    if(module.getBet() === module.takeAllBets()[module.takeAllBets()[-2]]){
       module.activate('betUp');
-    }
-    if(module.getBet() <= module.getAmount()){
-      module.activate('betUp');
-    }
-    return this;
-  }
-
-  function afterSpin(){
-
-    let incoming_cash = module.getCacheIncomingCash();
-
-    module.add(incoming_cash);
-    module.changeElementValue('amount', module.getAmount());
-
-    if(module.getAmount() >= 10){
-      module.activate('betUp');
-      module.activate('betDown');
-      module.activate('minBet');
-    }
-
-    if(module.getAmount() >= 10 && module.getAmount() >= module.takeAllBets()[module.config.options().bets.current_bet_index + 1]){
       module.activate('maxBet');
     }
 
-    if(module.getAmount() < 5){
-      module.disable('spin');
-    }else{
-      module.activate('spin');
-    }
-
-    if(module.getAmount() < module.getBet()){
-      module.setBet(5);
-      module.changeElementValue('bet', 5);
-
-      if(module.getAmount() > module.getBet()){
-        module.activate('betUp');
-        module.activate('maxBet');
-      }
-    }
-
-    if(module.getBet() === 2000){
-      module.disable('betUp');
-      module.disable('maxBet');
-    }
-
-    if(module.getBet() === 5){
-      module.disable('betDown');
+    //it have monney to bet up?
+    if(module.getBet() <= module.getAmount()){
+      module.activate('betUp');
+      module.activate('maxBet');
     }
     return this;
   }
 
-  function changeElementValue(target, monney){
+  function updateAmountOrBetUI(target, monney){
     monney = (monney / 100).toFixed(2).toString();
     if(monney.substr(1, 1) == '.'){
       monney = '0' + monney;
@@ -176,7 +133,6 @@ var SlotMashine = SlotMashine || {};
 
   module.buttons = _setElements(module.config.settings());
   module.time = time;
-  module.wasCliked = wasCliked;
   module.disable = disable;
   module.activate = activate;
   module.isActive = isActive;
@@ -184,7 +140,6 @@ var SlotMashine = SlotMashine || {};
   module.getElement = getElement;
   module.afterBetUp = afterBetUp;
   module.afterBetDown = afterBetDown;
-  module.afterSpin = afterSpin;
-  module.changeElementValue = changeElementValue;
+  module.updateAmountOrBetUI = updateAmountOrBetUI;
   
 })(SlotMashine);

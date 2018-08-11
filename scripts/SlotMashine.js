@@ -9,7 +9,63 @@ var SlotMashine = SlotMashine || {};
     module.disable('minBet');
     module.disable('maxBet');
     module.substract(module.getBet());
-    module.changeElementValue('amount', module.getAmount());
+    module.updateAmountOrBetUI('amount', module.getAmount());
+  });
+
+  module.on('animateRellsEnd', function(data){
+
+    const incoming_cash = module.getCacheIncomingCash();
+
+    module.add(incoming_cash);
+    module.updateAmountOrBetUI('amount', module.getAmount());
+
+    //monney are greater then second posible bet?
+    if(module.getAmount() >= module.takeAllBets()[1]){
+      module.activate('betUp');
+      module.activate('betDown');
+      module.activate('minBet');
+    }
+
+    //is it posible to rise the bet?
+    if(module.getAmount() >= module.takeAllBets()[1] && module.getAmount() >= module.takeAllBets()[module.config.options().bets.current_bet_index + 1]){
+      module.activate('maxBet');
+    }
+
+    //run out of monney or still play?
+    if(module.getAmount() < module.takeAllBets()[0]){
+      module.disable('spin');
+    }else{
+      module.activate('spin');
+    }
+
+    //monney are less then the current bet?
+    if(module.getAmount() < module.getBet()){
+      module.setBet(module.takeAllBets()[0]);
+      module.updateAmountOrBetUI('bet', module.takeAllBets()[0]);
+
+      //is posible to rise the bet?
+      if(module.getAmount() > module.getBet()){
+        module.activate('betUp');
+        module.activate('maxBet');
+      }
+    }
+
+    //is not posible to rise the bet?
+    if(module.getBet() === module.takeAllBets()[module.takeAllBets().length - 1]){
+      module.disable('betUp');
+      module.disable('maxBet');
+    }
+
+    //monney are the minimum posible bet?
+    if(module.getBet() === module.takeAllBets()[0]){
+      module.disable('betDown');
+    }
+
+    //is auto-play on?
+    module.config.options().rellsIsSpining = false;
+    if(module.config.options().autoPlayOn === true){
+      module.autoPlay.start();
+    }
   });
 
   function setGame(){
@@ -17,22 +73,13 @@ var SlotMashine = SlotMashine || {};
     module.loadScreen();
     module.setKeyFrame();
 
-    function animateSpining(){
-      return new Promise((resolve, reject) => {
-        module.setKeyFrame();
-        module.animateRellsStart(resolve);
-      });
-    }
-
     module.buttons.spin.click(function(e){
       e.preventDefault();
-      if(module.isActive('spin') && module.getAmount() >= 5){
-        module.wasCliked('spin');
+      if(module.config.options().rellsIsSpining === false && module.isActive('spin') && module.getAmount() >= 5){
+        module.config.options().rellsIsSpining = true;
         module.disable('spin');
-        animateSpining()
-          .then(() => {
-            module.afterSpin();
-          });
+        module.setKeyFrame();
+        module.animateRellsStart();
       }
     });
     return this;
@@ -41,10 +88,10 @@ var SlotMashine = SlotMashine || {};
   function setBetUp(){
     module.buttons.betUp.click(function(e){
       e.preventDefault();
-      module.betUp();
-      module.afterBetUp().changeElementValue('bet', module.getBet());
-      module.wasCliked('betUp');
-
+      if(module.isActive('betUp')){
+        module.betUp();
+        module.afterBetUp().updateAmountOrBetUI('bet', module.getBet());
+      }
     });
     return this;
   }
@@ -52,9 +99,10 @@ var SlotMashine = SlotMashine || {};
   function setBetDown(){
     module.buttons.betDown.click(function(e){
       e.preventDefault();
-      module.betDown();
-      module.afterBetDown().changeElementValue('bet', module.getBet());
-      module.wasCliked('betDown');
+      if(module.isActive('betDown')){
+        module.betDown();
+        module.afterBetDown().updateAmountOrBetUI('bet', module.getBet());
+      }
     });
     return this;
   }
@@ -62,13 +110,12 @@ var SlotMashine = SlotMashine || {};
   function setMinBet(){
     module.buttons.minBet.click(function(e){
       e.preventDefault();
-      module.setBet(5);
-      module.changeElementValue('bet', 5)
+      module.setBet(module.takeAllBets()[0]);
+      module.updateAmountOrBetUI('bet', module.takeAllBets()[0])
         .activate('betUp')
         .disable('betDown')
         .disable('minBet')
-        .activate('maxBet')
-        .wasCliked('minBet');
+        .activate('maxBet');
     });
     return this;
   }
@@ -82,12 +129,11 @@ var SlotMashine = SlotMashine || {};
         });
         module.takeAllBets().reverse();
         module.setBet(maxPosibleBet);
-        module.changeElementValue('bet', maxPosibleBet)
+        module.updateAmountOrBetUI('bet', maxPosibleBet)
           .disable('betUp')
           .activate('betDown')
           .disable('maxBet')
-          .activate('minBet')
-          .wasCliked('maxBet');
+          .activate('minBet');
       }
     });
     return this;
@@ -96,8 +142,8 @@ var SlotMashine = SlotMashine || {};
   function setAutoPlay(){
 
     module.buttons.autoPlay.click(function(e){
-      module.disable('autoPlay');
       module.config.options().autoPlayOn = true;
+      module.disable('autoPlay');
       module.autoPlay.start();
     });
 

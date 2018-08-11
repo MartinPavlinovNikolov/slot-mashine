@@ -55,6 +55,7 @@
     <script src="scripts/AutoPlay.js"></script>
     <script src="scripts/Rows.js"></script>
     <script src="scripts/Screen.js"></script>
+    <script src="scripts/Wins.js"></script>
     <script src="scripts/SlotMashine.js"></script>
     <script src="scripts/main.js"></script>
     

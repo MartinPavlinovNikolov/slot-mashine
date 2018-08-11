@@ -47,8 +47,8 @@ var SlotMashine = SlotMashine || {};
     let rotateX = 0;
     
     //todo: relocate this 2 lines in separate fnction in slotmashine.js
-    module.changeElementValue('amount', 2000);
-    module.changeElementValue('bet', 5);
+    module.updateAmountOrBetUI('amount', 2000);
+    module.updateAmountOrBetUI('bet', 5);
 
     module.config.options().translateZ = imgHeight/(2*Math.tan(Math.PI/module.config.settings().imagesPerRell));
 
@@ -111,8 +111,8 @@ var SlotMashine = SlotMashine || {};
     return module;
   }
 
-  function animateRellsStart(resolve){
-    module.publish(arguments.callee.name);
+  function animateRellsStart(){
+    module.publish('animateRellsStart');
 
     let current_rel = 0;
     let elms = $('.carousel');
@@ -122,16 +122,26 @@ var SlotMashine = SlotMashine || {};
         $(e).css({
           "animation": `spinTheRells ${module.config.options().timeControll.forOneFullSpinPerRell}s linear forwards`
         });
+        
+      }, current_rel * module.config.options().timeControll.delayBetweenRellsSpins);
 
-        if(current_rel === module.config.settings().rells){
-          setTimeout(function(){
+      if(current_rel === module.config.settings().rells){
+        setTimeout(function(){
+          let current_rel_copy = current_rel;
+          for(let e of elms){
             $(e).css({
               "animation": ''
             });
-            resolve();
-          }, module.config.options().timeControll.forOneFullSpinPerRell*1000+1500);
-        }
-      }, current_rel * module.config.options().timeControll.delayBetweenRellsSpins);
+          }
+          //todo: check for winings
+          const winingMock = 2000;
+          if(winingMock > 0){
+            module.activateWiningImages();
+          }else{
+            module.publish('animateRellsEnd');
+          }
+        }, module.config.options().timeControll.forOneFullSpinPerRell*1000+1500);
+      }
 
       //replace images in the middle of the animation. It hapen when the images are in back side of the rells.
       replaceImagesInSpiningRellsAnimation(e, (((current_rel-1) * module.config.options().timeControll.delayBetweenRellsSpins)+module.config.options().timeControll.forOneFullSpinPerRell*1000/2));

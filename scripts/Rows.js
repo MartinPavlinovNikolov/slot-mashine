@@ -34,8 +34,14 @@ var SlotMashine = SlotMashine || {};
           }
 
           if(that.element.prop('id') === module.config.options().grid.lastAnimatedElementId){
+//auto-play is turn on?
+alert('end');
+if(module.config.options().is_auto_play === true){
+  module.autoPlay.start();
+}
             module.setCacheIncomingCash(Math.ceil(colectLines(module.config.options().grid) * module.getBet()));
             linghtWiningImages(module.config.options().grid.winingIds);
+            
             if(module.getCacheIncomingCash() !== 0){
               displayFreshCash(module.getCacheIncomingCash());
             }
