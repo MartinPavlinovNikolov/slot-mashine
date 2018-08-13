@@ -2,6 +2,8 @@ var SlotMashine = SlotMashine || {};
 
 (function($, module){
 
+  module.createTables('info-table');
+
   module.on('animateRellsStart', function(data){
     module.disable('spin');
     module.disable('betUp');
@@ -10,6 +12,21 @@ var SlotMashine = SlotMashine || {};
     module.disable('maxBet');
     module.substract(module.getBet());
     module.updateAmountOrBetUI('amount', module.getAmount());
+  });
+
+  module.on('rellCounting', function(counter){
+    if(counter === module.config.settings().rells){
+      setTimeout(function(){
+        let elms = $('.carousel');
+        for(let e of elms){
+          $(e).css({
+            "animation": ''
+          });
+        }
+
+        module.checkForWiningLines();
+      }, module.config.options().timeControll.forOneFullSpinPerRell * 1000);
+    }
   });
 
   module.on('animateRellsEnd', function(data){
@@ -75,6 +92,13 @@ var SlotMashine = SlotMashine || {};
 
     module.buttons.spin.click(function(e){
       e.preventDefault();
+
+      let elms = $('.wining');
+      $('#remove-me').remove();
+      elms.each(function(){
+        $(this).removeClass('wining');
+      });
+
       if(module.config.options().rellsIsSpining === false && module.isActive('spin') && module.getAmount() >= 5){
         module.config.options().rellsIsSpining = true;
         module.disable('spin');

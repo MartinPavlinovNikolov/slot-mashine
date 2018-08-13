@@ -64,7 +64,6 @@ var SlotMashine = SlotMashine || {};
       $(`.scene${i}`).append('<div class="carousel"></div>');
       $(`.scene${i}`).css({
           "display": "inline-block",
-          "border": "1px solid #ccc",
           "margin": "0",
           "padding": "0",
           "position": "relative",
@@ -111,6 +110,7 @@ var SlotMashine = SlotMashine || {};
     module.publish('animateRellsStart');
 
     let current_rel = 0;
+    let rellCounter = 0;
     let elms = $('.carousel');
     for(let e of elms){
       current_rel++;
@@ -118,22 +118,10 @@ var SlotMashine = SlotMashine || {};
         $(e).css({
           "animation": `spinTheRells ${module.config.options().timeControll.forOneFullSpinPerRell}s linear forwards`
         });
+        rellCounter++;
+        module.publish('rellCounting', rellCounter);
         
       }, current_rel * module.config.options().timeControll.delayBetweenRellsSpins);
-
-      if(current_rel === module.config.settings().rells){
-        setTimeout(function(){
-          let current_rel_copy = current_rel;
-          for(let e of elms){
-            $(e).css({
-              "animation": ''
-            });
-          }
-
-          module.checkForWiningLines();
-
-        }, module.config.options().timeControll.forOneFullSpinPerRell*1000+1500);
-      }
 
       //replace images in the middle of the animation. It hapen when the images are in back side of the rells.
       replaceImagesInSpiningRellsAnimation(e, (((current_rel-1) * module.config.options().timeControll.delayBetweenRellsSpins)+module.config.options().timeControll.forOneFullSpinPerRell*1000/2));

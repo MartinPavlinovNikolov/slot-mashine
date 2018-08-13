@@ -9,6 +9,15 @@
 
 </head>
 <body>
+    
+    <!-- Info START -->
+    <div id="info-action">
+        <h2>Pay-Table</h2>
+    </div>
+    <div id="info-container">
+        <div id="info-table"></div>
+    </div>
+    <!-- Info END -->
 
     <div id="main-container"><!--main-container START-->
         <div id="slot-mashine"><!-- slot-mashine corpus START -->
@@ -55,6 +64,7 @@
     <script src="scripts/AutoPlay.js"></script>
     <script src="scripts/Screen.js"></script>
     <script src="scripts/Wins.js"></script>
+    <script src="scripts/Info.js"></script>
     <script src="scripts/SlotMashine.js"></script>
     <script src="scripts/main.js"></script>
     

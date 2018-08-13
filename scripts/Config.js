@@ -19,20 +19,26 @@ var SlotMashine = SlotMashine || {};
         'current_bet_index': 0
       },
       'koeficients': {
+        'points': {
+          'forThreeLines': 2,
+          'forFourLines': 3,
+          'forFiveLines': 4
+        },
         'all': {
-          '1': 0.4,
-          '2': 0.6,
+          '1': 0.2,
+          '2': 0.4,
           '3': 0.8,
           '4': 1,
-          '5': 1.2,
-          '6': 1.4
+          '5': 1.4,
+          '6': 2
         },
         'current': 1
       },
       'timeControll': {
         'animateOnButtonClick': 200,
-        'forOneFullSpinPerRell': 5,
-        'delayBetweenRellsSpins': 200
+        'forOneFullSpinPerRell': 3,
+        'delayBetweenRellsSpins': 200,
+        'delayForWiningImagesAnimationOnAutoPlay': 1500
       },
       'grid': {
         'cells': [[], [], []],
@@ -60,7 +66,7 @@ var SlotMashine = SlotMashine || {};
         'speed': 'speed'
       },
       'rells': 5,
-      'imagesPerRell': 36,
+      'imagesPerRell': 18,
       'perspectiveOrigins': ["250%", "150%", "50%", "-50%", "-150%"],
       'rellsZIndexes': [10, 20, 50, 40, 30]
     },
