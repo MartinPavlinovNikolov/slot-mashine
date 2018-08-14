@@ -68,6 +68,7 @@ var SlotMashine = SlotMashine || {};
       srcs.push(img.prop('src').substr(-5, 1));
       module.config.options().grid.ids.push(img.prop('id'));
     });
+
     module.config.options().incoming_cash = isMatch(srcs.join(''));
     winingIds = module.config.options().grid.winingIds;
     module.config.options().grid.winingIds = [];
@@ -76,228 +77,269 @@ var SlotMashine = SlotMashine || {};
     animateWiningCells(winingIds);
   }
 
-  function isMatch(imagesIds, firstId = null, currentId = null, passedId = null, points = null, firstRow = false, secondRow = false, thirdRow = false, firstRell = false, secondRell = false, thirdRell= false, fourthRell = false){
+  function isMatch(
+      imagesIds,
+      firstRellSrc = null,
+      prevSrcNumber = null,
+      srcNumber = null,
+      points = null,
+      comingFromFirstRow = false,
+      comingFromSecondRow = false,
+      comingFromThirdRow = false,
+      comingFromFirstRell = false,
+      comingFromSecondRell = false,
+      comingFromThirdRell= false,
+      comingFromFourthRell = false
+    ){
+
+    const indexes = module.config.settings().rells === 5?[
+      0, 5, 10, 1, 6, 11, 2, 7, 12, 3, 8, 13, 4, 9, 14
+    ]:[
+      0, 3, 6, 1, 4, 7, 2, 5, 8
+    ];
+
     if(points === null){
       points = 0;
-      let first = isMatch(imagesIds, 0, 0, imagesIds[0], points, true, false, false, true) * module.config.options().koeficients.all[module.config.options().koeficients.current] * module.getBet();
+      let first = isMatch(imagesIds, indexes[0], indexes[0], imagesIds[indexes[0]], points, true, false, false, true) * module.config.options().koeficients.all[module.config.options().koeficients.current] * module.getBet();
       module.config.options().koeficients.current = 1;
 
-      let second = isMatch(imagesIds, 5, 5, imagesIds[5], points, false, true, false, true) * module.config.options().koeficients.all[module.config.options().koeficients.current] * module.getBet();
+      let second = isMatch(imagesIds, indexes[1], indexes[1], imagesIds[indexes[1]], points, false, true, false, true) * module.config.options().koeficients.all[module.config.options().koeficients.current] * module.getBet();
       module.config.options().koeficients.current = 1;
 
-      let third = isMatch(imagesIds, 10, 10, imagesIds[10], points, false, false, true, true) * module.config.options().koeficients.all[module.config.options().koeficients.current] * module.getBet();
+      let third = isMatch(imagesIds, indexes[2], indexes[2], imagesIds[indexes[2]], points, false, false, true, true) * module.config.options().koeficients.all[module.config.options().koeficients.current] * module.getBet();
       module.config.options().koeficients.current = 1;
 
       return Math.ceil(first + second + third);
     }else{
 
       //check first Rell vs second Rell
-      if(firstRell === true){
-        module.config.options().koeficients.current = passedId;
+      if(comingFromFirstRell){
+        module.config.options().koeficients.current = srcNumber;
 
-        if(firstRow === true){
+        if(comingFromFirstRow){
           // Row #1, Rell #1 === Row #1, Rell #2
-          if(passedId === imagesIds[1]){
-            points = isMatch(imagesIds, firstId, 1, passedId, points, true, false, false, false, true);
+          if(srcNumber === imagesIds[indexes[3]]){
+            points = isMatch(imagesIds, firstRellSrc, indexes[3], srcNumber, points, true, false, false, false, true);
           }
           // Row #1, Rell #1 === Row #2, Rell #2
-          if(passedId === imagesIds[6]){
-            points = isMatch(imagesIds, firstId, 6, passedId, points, true, false, false, false, true);
+          if(srcNumber === imagesIds[indexes[4]]){
+            points = isMatch(imagesIds, firstRellSrc, indexes[4], srcNumber, points, false, true, false, false, true);
           }
         }
 
-        if(secondRow){
+        if(comingFromSecondRow){
           // Row #2, Rell #1 === Row #1, Rell #2
-          if(passedId === imagesIds[1]){
-            points = isMatch(imagesIds, firstId, 1, passedId, points, false, true, false, false, true);
+          if(srcNumber === imagesIds[indexes[3]]){
+            points = isMatch(imagesIds, firstRellSrc, indexes[3], srcNumber, points, true, false, false, false, true);
           }
           // Row #2, Rell #1 === Row #2, Rell #2
-          if(passedId === imagesIds[6]){
-            points = isMatch(imagesIds, firstId, 6, passedId, points, false, true, false, false, true);
+          if(srcNumber === imagesIds[indexes[4]]){
+            points = isMatch(imagesIds, firstRellSrc, indexes[4], srcNumber, points, false, true, false, false, true);
           }
           // Row #2, Rell #1 === Row #3, Rell #2
-          if(passedId === imagesIds[11]){
-            points = isMatch(imagesIds, firstId, 11, passedId, points, false, true, false, false, true);
+          if(srcNumber === imagesIds[indexes[5]]){
+            points = isMatch(imagesIds, firstRellSrc, indexes[5], srcNumber, points, false, false, true, false, true);
           }
         }
 
-        if(thirdRow){
+        if(comingFromThirdRow){
           // Row #3, Rell #1 === Row #2, Rell #2
-          if(passedId === imagesIds[6]){
-            points = isMatch(imagesIds, firstId, 6, passedId, points, false, false, true, false, true);
+          if(srcNumber === imagesIds[indexes[4]]){
+            points = isMatch(imagesIds, firstRellSrc, indexes[4], srcNumber, points, false, true, false, false, true);
           }
           // Row #3, Rell #1 === Row #3, Rell #2
-          if(passedId === imagesIds[11]){
-            points = isMatch(imagesIds, firstId, 11, passedId, points, false, false, true, false, true);
+          if(srcNumber === imagesIds[indexes[5]]){
+            points = isMatch(imagesIds, firstRellSrc, indexes[5], srcNumber, points, false, false, true, false, true);
           }
         }
       }
 
       //check second Rell vs third Rell
-      if(secondRell === true){
-        module.config.options().koeficients.current = passedId;
+      if(comingFromSecondRell){
+        module.config.options().koeficients.current = srcNumber;
         
-        if(firstRow){
+        if(comingFromFirstRow){
           // Row #1, Rell #2 === Row #1, Rell #3
-          if(passedId === imagesIds[2]){
+          if(srcNumber === imagesIds[indexes[6]]){
             points+= module.config.options().koeficients.points.forThreeLines;
-            module.config.options().grid.winingIds.push(firstId);
-            module.config.options().grid.winingIds.push(currentId);
-            module.config.options().grid.winingIds.push(2);
-            points = isMatch(imagesIds, null, null, passedId, points, true, false, false, false, false, true);
+            module.config.options().grid.winingIds.push(firstRellSrc);
+            module.config.options().grid.winingIds.push(prevSrcNumber);
+            module.config.options().grid.winingIds.push(indexes[6]);
+            if(module.config.settings().rells === indexes[6]){
+
+            points = isMatch(imagesIds, null, null, srcNumber, points, true, false, false, false, false, true);
+            }
           }
           // Row #1, Rell #2 === Row #2, Rell #3
-          if(passedId === imagesIds[7]){
+          if(srcNumber === imagesIds[indexes[7]]){
             points+= module.config.options().koeficients.points.forThreeLines;
-            module.config.options().grid.winingIds.push(firstId);
-            module.config.options().grid.winingIds.push(currentId);
-            module.config.options().grid.winingIds.push(7);
-            points = isMatch(imagesIds, null, null, passedId, points, true, false, false, false, false, true);
+            module.config.options().grid.winingIds.push(firstRellSrc);
+            module.config.options().grid.winingIds.push(prevSrcNumber);
+            module.config.options().grid.winingIds.push(indexes[7]);
+            if(module.config.settings().rells === 5){
+
+            points = isMatch(imagesIds, null, null, srcNumber, points, false, true, false, false, false, true);
+            }
           }
         }
-        if(secondRow){
+        if(comingFromSecondRow){
           // Row #2, Rell #2 === Row #1, Rell #3
-          if(passedId === imagesIds[2]){
+          if(srcNumber === imagesIds[indexes[6]]){
             points+= module.config.options().koeficients.points.forThreeLines;
-            module.config.options().grid.winingIds.push(firstId);
-            module.config.options().grid.winingIds.push(currentId);
-            module.config.options().grid.winingIds.push(2);
-            points = isMatch(imagesIds, null, null, passedId, points, false, true, false, false, false, true);
+            module.config.options().grid.winingIds.push(firstRellSrc);
+            module.config.options().grid.winingIds.push(prevSrcNumber);
+            module.config.options().grid.winingIds.push(indexes[6]);
+            if(module.config.settings().rells === 5){
+
+            points = isMatch(imagesIds, null, null, srcNumber, points, true, false, false, false, false, true);
+            }
           }
           // Row #2, Rell #2 === Row #2, Rell #3
-          if(passedId === imagesIds[7]){
+          if(srcNumber === imagesIds[indexes[7]]){
             points+= module.config.options().koeficients.points.forThreeLines;
-            module.config.options().grid.winingIds.push(firstId);
-            module.config.options().grid.winingIds.push(currentId);
-            module.config.options().grid.winingIds.push(7);
-            points = isMatch(imagesIds, null, null, passedId, points, false, true, false, false, false, true);
+            module.config.options().grid.winingIds.push(firstRellSrc);
+            module.config.options().grid.winingIds.push(prevSrcNumber);
+            module.config.options().grid.winingIds.push(indexes[7]);
+            if(module.config.settings().rells === 5){
+
+            points = isMatch(imagesIds, null, null, srcNumber, points, false, true, false, false, false, true);
+            }
           }
           // Row #2, Rell #2 === Row #2, Rell #3
-          if(passedId === imagesIds[12]){
+          if(srcNumber === imagesIds[indexes[8]]){
             points+= module.config.options().koeficients.points.forThreeLines;
-            module.config.options().grid.winingIds.push(firstId);
-            module.config.options().grid.winingIds.push(currentId);
-            module.config.options().grid.winingIds.push(12);
-            points = isMatch(imagesIds, null, null, passedId, points, false, true, false, false, false, true);
+            module.config.options().grid.winingIds.push(firstRellSrc);
+            module.config.options().grid.winingIds.push(prevSrcNumber);
+            module.config.options().grid.winingIds.push(indexes[8]);
+            if(module.config.settings().rells === 5){
+
+            points = isMatch(imagesIds, null, null, srcNumber, points, false, false, true, false, false, true);
+            }
           }
         }
-        if(thirdRow){
+        if(comingFromThirdRow){
           // Row #3, Rell #2 === Row #2, Rell #3
-          if(passedId === imagesIds[7]){
+          if(srcNumber === imagesIds[indexes[7]]){
             points+= module.config.options().koeficients.points.forThreeLines;
-            module.config.options().grid.winingIds.push(firstId);
-            module.config.options().grid.winingIds.push(currentId);
-            module.config.options().grid.winingIds.push(7);
-            points = isMatch(imagesIds, null, null, passedId, points, false, false, true, false, false, true);
+            module.config.options().grid.winingIds.push(firstRellSrc);
+            module.config.options().grid.winingIds.push(prevSrcNumber);
+            module.config.options().grid.winingIds.push(indexes[7]);
+            if(module.config.settings().rells === 5){
+
+            points = isMatch(imagesIds, null, null, srcNumber, points, false, true, false, false, false, true);
+            }
           }
           // Row #3, Rell #2 === Row #2, Rell #3
-          if(passedId === imagesIds[12]){
+          if(srcNumber === imagesIds[indexes[8]]){
             points+= module.config.options().koeficients.points.forThreeLines;
-            module.config.options().grid.winingIds.push(firstId);
-            module.config.options().grid.winingIds.push(currentId);
-            module.config.options().grid.winingIds.push(12);
-            points = isMatch(imagesIds, null, null, passedId, points, false, false, true, false, false, true);
+            module.config.options().grid.winingIds.push(firstRellSrc);
+            module.config.options().grid.winingIds.push(prevSrcNumber);
+            module.config.options().grid.winingIds.push(indexes[8]);
+            if(module.config.settings().rells === 5){
+
+            points = isMatch(imagesIds, null, null, srcNumber, points, false, false, true, false, false, true);
+            }
           }
         }
       }
 
       //check third Rell vs fourth Rell
-      if(thirdRell === true){
-        module.config.options().koeficients.current = passedId;
+      if(comingFromThirdRell){
+        module.config.options().koeficients.current = srcNumber;
         
-        if(firstRow){
+        if(comingFromFirstRow){
           // Row #1, Rell #3 === Row #1, Rell #4
-          if(passedId === imagesIds[3]){
+          if(srcNumber === imagesIds[indexes[9]]){
             points+= module.config.options().koeficients.points.forFourLines - module.config.options().koeficients.points.forThreeLines;
-            module.config.options().grid.winingIds.push(3);
-            points = isMatch(imagesIds, null, null, passedId, points, true, false, false, false, false, false, true);
+            module.config.options().grid.winingIds.push(indexes[9]);
+            points = isMatch(imagesIds, null, null, srcNumber, points, true, false, false, false, false, false, true);
           }
           // Row #1, Rell #3 === Row #2, Rell #4
-          if(passedId === imagesIds[8]){
+          if(srcNumber === imagesIds[indexes[10]]){
             points+= module.config.options().koeficients.points.forFourLines - module.config.options().koeficients.points.forThreeLines;
-            module.config.options().grid.winingIds.push(8);
-            points = isMatch(imagesIds, null, null, passedId, points, true, false, false, false, false, false, true);
+            module.config.options().grid.winingIds.push(indexes[10]);
+            points = isMatch(imagesIds, null, null, srcNumber, points, false, true, false, false, false, false, true);
           }
         }
-        if(secondRow){
+        if(comingFromSecondRow){
           // Row #2, Rell #3 === Row #1, Rell #4
-          if(passedId === imagesIds[3]){
+          if(srcNumber === imagesIds[indexes[9]]){
             points+= module.config.options().koeficients.points.forFourLines - module.config.options().koeficients.points.forThreeLines;
-            module.config.options().grid.winingIds.push(3);
-            points = isMatch(imagesIds, null, null, passedId, points, false, true, false, false, false, false, true);
+            module.config.options().grid.winingIds.push(indexes[9]);
+            points = isMatch(imagesIds, null, null, srcNumber, points, true, false, false, false, false, false, true);
           }
           // Row #2, Rell #3 === Row #2, Rell #4
-          if(passedId === imagesIds[8]){
+          if(srcNumber === imagesIds[indexes[10]]){
             points+= module.config.options().koeficients.points.forFourLines - module.config.options().koeficients.points.forThreeLines;
-            module.config.options().grid.winingIds.push(8);
-            points = isMatch(imagesIds, null, null, passedId, points, false, true, false, false, false, false, true);
+            module.config.options().grid.winingIds.push(indexes[10]);
+            points = isMatch(imagesIds, null, null, srcNumber, points, false, true, false, false, false, false, true);
           }
           // Row #2, Rell #3 === Row #2, Rell #4
-          if(passedId === imagesIds[13]){
+          if(srcNumber === imagesIds[indexes[11]]){
             points+= module.config.options().koeficients.points.forFourLines - module.config.options().koeficients.points.forThreeLines;
-            module.config.options().grid.winingIds.push(13);
-            points = isMatch(imagesIds, null, null, passedId, points, false, true, false, false, false, false, true);
+            module.config.options().grid.winingIds.push(indexes[11]);
+            points = isMatch(imagesIds, null, null, srcNumber, points, false, false, true, false, false, false, true);
           }
         }
-        if(thirdRow){
+        if(comingFromThirdRow){
           // Row #3, Rell #3 === Row #2, Rell #4
-          if(passedId === imagesIds[8]){
+          if(srcNumber === imagesIds[indexes[10]]){
             points+= module.config.options().koeficients.points.forFourLines - module.config.options().koeficients.points.forThreeLines;
-            module.config.options().grid.winingIds.push(8);
-            points = isMatch(imagesIds, null, null, passedId, points, false, false, true, false, false, false, true);
+            module.config.options().grid.winingIds.push(indexes[10]);
+            points = isMatch(imagesIds, null, null, srcNumber, points, false, true, false, false, false, false, true);
           }
           // Row #3, Rell #3 === Row #2, Rell #4
-          if(passedId === imagesIds[13]){
+          if(srcNumber === imagesIds[indexes[11]]){
             points+= module.config.options().koeficients.points.forFourLines - module.config.options().koeficients.points.forThreeLines;
-            module.config.options().grid.winingIds.push(13);
-            points = isMatch(imagesIds, null, null, passedId, points, false, false, true, false, false, false, true);
+            module.config.options().grid.winingIds.push(indexes[11]);
+            points = isMatch(imagesIds, null, null, srcNumber, points, false, false, true, false, false, false, true);
           }
         }
       }
 
       //check fourth Rell vs fiveth Rell
-      if(fourthRell === true){
-        module.config.options().koeficients.current = passedId;
+      if(comingFromFourthRell){
+        module.config.options().koeficients.current = srcNumber;
         
-        if(firstRow){
+        if(comingFromFirstRow){
           // Row #1, Rell #4 === Row #1, Rell #5
-          if(passedId === imagesIds[4]){
+          if(srcNumber === imagesIds[indexes[12]]){
             points+= module.config.options().koeficients.points.forFiveLines - module.config.options().koeficients.points.forFourLines;
-            module.config.options().grid.winingIds.push(4);
+            module.config.options().grid.winingIds.push(indexes[12]);
           }
           // Row #1, Rell #4 === Row #2, Rell #5
-          if(passedId === imagesIds[9]){
+          if(srcNumber === imagesIds[indexes[13]]){
             points+= module.config.options().koeficients.points.forFiveLines - module.config.options().koeficients.points.forFourLines;
-            module.config.options().grid.winingIds.push(9);
+            module.config.options().grid.winingIds.push(indexes[13]);
           }
         }
-        if(secondRow){
+        if(comingFromSecondRow){
           // Row #2, Rell #4 === Row #1, Rell #5
-          if(passedId === imagesIds[4]){
+          if(srcNumber === imagesIds[indexes[12]]){
             points+= module.config.options().koeficients.points.forFiveLines - module.config.options().koeficients.points.forFourLines;
-            module.config.options().grid.winingIds.push(4);
+            module.config.options().grid.winingIds.push(indexes[12]);
           }
           // Row #2, Rell #4 === Row #2, Rell #5
-          if(passedId === imagesIds[9]){
+          if(srcNumber === imagesIds[indexes[13]]){
             points+= module.config.options().koeficients.points.forFiveLines - module.config.options().koeficients.points.forFourLines;
-            module.config.options().grid.winingIds.push(9);
+            module.config.options().grid.winingIds.push(indexes[13]);
           }
           // Row #2, Rell #4 === Row #2, Rell #5
-          if(passedId === imagesIds[14]){
+          if(srcNumber === imagesIds[indexes[14]]){
             points+= module.config.options().koeficients.points.forFiveLines - module.config.options().koeficients.points.forFourLines;
-            module.config.options().grid.winingIds.push(14);
+            module.config.options().grid.winingIds.push(indexes[14]);
           }
         }
-        if(thirdRow){
+        if(comingFromThirdRow){
           // Row #3, Rell #4 === Row #2, Rell #5
-          if(passedId === imagesIds[9]){
+          if(srcNumber === imagesIds[indexes[13]]){
             points+= module.config.options().koeficients.points.forFiveLines - module.config.options().koeficients.points.forFourLines;
-            module.config.options().grid.winingIds.push(9);
+            module.config.options().grid.winingIds.push(indexes[13]);
           }
           // Row #3, Rell #4 === Row #2, Rell #5
-          if(passedId === imagesIds[14]){
+          if(srcNumber === imagesIds[indexes[14]]){
             points+= module.config.options().koeficients.points.forFiveLines - module.config.options().koeficients.points.forFourLines;
-            module.config.options().grid.winingIds.push(14);
+            module.config.options().grid.winingIds.push(indexes[14]);
           }
         }
       }
