@@ -63,12 +63,13 @@ var SlotMashine = SlotMashine || {};
         'maxBet': 'max-bet',
         'minBet': 'min-bet',
         'autoPlay': 'auto-play',
-        'speed': 'speed'
+        'speed': 'speed',
+        'switch': 'switch'
       },
-      'rells': 5,
+      'rells': 3,
       'imagesPerRell': 18,
-      'perspectiveOrigins': ["250%", "150%", "50%", "-50%", "-150%"],
-      'rellsZIndexes': [10, 20, 50, 40, 30]
+      'game3X3': '3X3',
+      'game3X5': '3X5'
     },
     'options': options,
     'settings': settings,

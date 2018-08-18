@@ -85,8 +85,20 @@ var SlotMashine = SlotMashine || {};
     }
   });
 
+  module.buttons.switch.on('click', function(e){
+    e.preventDefault();
+    module.switchGame();
+  });
+
   function setGame(){
 
+    if(module.config.settings().rells === 5){
+      module.buttons.switch.text(module.config.settings().game3X5);
+    }else{
+      module.buttons.switch.text(module.config.settings().game3X3);
+    }
+    module.updateAmountOrBetUI('amount', 2000);
+    module.updateAmountOrBetUI('bet', 5);
     module.loadScreen();
     module.setKeyFrame();
 

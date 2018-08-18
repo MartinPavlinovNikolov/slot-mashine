@@ -40,28 +40,12 @@ var SlotMashine = SlotMashine || {};
     const imgWidth = $('#screen').css('width').replace('px', '') / module.config.settings().rells;
     const imgHeight = $('#screen').css('height').replace('px', '') / 3;
     const addToRotateX = 360 / module.config.settings().imagesPerRell;
-
-    let perspectiveOrigin = module.config.settings().perspectiveOrigins;
-    let zIndexs = module.config.settings().rellsZIndexes;
-    let iPersOrig = zIndexs.length-1;
     let rotateX = 0;
-    
-    //todo: relocate this 2 lines in separate fnction in slotmashine.js
-    module.updateAmountOrBetUI('amount', 2000);
-    module.updateAmountOrBetUI('bet', 5);
 
     module.config.options().translateZ = imgHeight/(2*Math.tan(Math.PI/module.config.settings().imagesPerRell));
 
-    if(module.config.settings().rells === 3){
-      perspectiveOrigin.pop();
-      perspectiveOrigin.shift();
-      zIndexs.pop();
-      zIndexs.shift();
-    }
-
     for(let i = 1; i <= module.config.settings().rells; i++){
       $('#screen').append(`<div class="scene${i}"></div>`);
-      $(`.scene${i}`).append('<div class="carousel"></div>');
       $(`.scene${i}`).css({
           "display": "inline-block",
           "margin": "0",
@@ -69,10 +53,7 @@ var SlotMashine = SlotMashine || {};
           "position": "relative",
           "width": `${imgWidth}px`,
           "height": `${imgHeight}`,
-          "perspective": "1000px",
-          "z-index": zIndexs[i-1],
-          "perspective-origin": perspectiveOrigin[i-1]
-      });
+      }).append('<div class="carousel"></div>');
       $('.carousel').css({
           "width": "100%",
           "height": "100%",

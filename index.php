@@ -10,6 +10,10 @@
 </head>
 <body>
     
+    <!-- switch game START -->
+    <button id="switch"></button>
+    <!-- switch game END -->
+
     <!-- Info START -->
     <div id="info-action">
         <h2>Pay-Table</h2>
@@ -65,6 +69,7 @@
     <script src="scripts/Screen.js"></script>
     <script src="scripts/Wins.js"></script>
     <script src="scripts/Info.js"></script>
+    <script src="scripts/GameSwitcher.js"></script>
     <script src="scripts/SlotMashine.js"></script>
     <script src="scripts/main.js"></script>
     
