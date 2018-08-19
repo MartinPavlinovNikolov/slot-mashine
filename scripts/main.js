@@ -8,5 +8,10 @@ window.addEventListener('load', function(){
     .setMinBet()
     .setMaxBet()
     .setAutoPlay()
-    .setSpeed();
+    .setSpeed()
+    .setSwitchButton()
+    .listenForClickOnSpinButton()
+    .listenFor_rellCounting()
+    .listenFor_animateRellsStart()
+    .listenFor_animateRellsEnd();
 });

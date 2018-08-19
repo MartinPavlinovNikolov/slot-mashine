@@ -4,6 +4,8 @@ var SlotMashine = SlotMashine || {};
 
   function activateWiningImages(){
     setWiningImagesIds();
+
+    return module;
   }
 
   function setImages(element){
@@ -23,7 +25,7 @@ var SlotMashine = SlotMashine || {};
 
     $('body').append('<h2 id="remove-me" class="displayWiningCash">+ ' + monney + '!</h2>');
 
-    return this;
+    return module;
   }
 
   function animateWiningCells(cellsIds){
@@ -49,6 +51,8 @@ var SlotMashine = SlotMashine || {};
       module.publish('animateRellsEnd');
     }
     module.config.options().grid.ids = [];
+
+    return module;
   }
 
   function checkForWiningLines(){
@@ -75,6 +79,8 @@ var SlotMashine = SlotMashine || {};
     module.config.options().grid.cells = [[], [], []];
 
     animateWiningCells(winingIds);
+
+    return module;
   }
 
   function isMatch(

@@ -107,6 +107,8 @@ var SlotMashine = SlotMashine || {};
       //replace images in the middle of the animation. It hapen when the images are in back side of the rells.
       replaceImagesInSpiningRellsAnimation(e, (((current_rel-1) * module.config.options().timeControll.delayBetweenRellsSpins)+module.config.options().timeControll.forOneFullSpinPerRell*1000/2));
     }
+
+    return module;
   }
 
   function replaceImagesInSpiningRellsAnimation(element, time){

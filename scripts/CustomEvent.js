@@ -14,6 +14,7 @@ var SlotMashine = SlotMashine || {};
         module.subscribers[type[i]].forEach((f)=>f(data));
       }
     }
+
     return module;
   }
 
@@ -34,6 +35,7 @@ var SlotMashine = SlotMashine || {};
       }
       module.subscribers[type[i]].push(handler);
     }
+
     return module;
   }
 
@@ -47,6 +49,7 @@ var SlotMashine = SlotMashine || {};
         module.subscribers[type[i]].splice(ind, 1);
       });
     }
+    
     return module;
   }
 

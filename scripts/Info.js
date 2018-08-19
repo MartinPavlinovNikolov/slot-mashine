@@ -59,6 +59,8 @@ var SlotMashine = SlotMashine || {};
         }
       });
     }
+
+    return module;
   }
 
 
