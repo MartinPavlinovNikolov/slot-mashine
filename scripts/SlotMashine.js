@@ -146,6 +146,7 @@ var SlotMashine = SlotMashine || {};
       e.preventDefault();
       if(module.isActive('betUp')){
         module.betUp()
+          .afterBetUp()
           .updateAmountOrBetUI('bet', module.getBet());
       }
     });
@@ -158,6 +159,7 @@ var SlotMashine = SlotMashine || {};
       e.preventDefault();
       if(module.isActive('betDown')){
         module.betDown()
+          .afterBetDown()
           .updateAmountOrBetUI('bet', module.getBet());
       }
     });

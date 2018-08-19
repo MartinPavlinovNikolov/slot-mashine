@@ -45,6 +45,49 @@ var SlotMashine = SlotMashine || {};
   function getCacheIncomingCash(){
     return module.config.options().incoming_cash;
   }
+
+  function afterBetUp(){
+
+    //do not have monney for bigger bet?
+    if(module.getAmount() < (module.takeAllBets()[module.config.options().bets.current_bet_index+1] || module.takeAllBets()[module.takeAllBets().length-1])){
+      module.disable('betUp')
+        .disable('maxBet');
+    }
+
+    //the bet is second posible bet or amount are at least next bet value?
+    if(module.getBet() === module.takeAllBets()[1] || module.getAmount() >= (module.takeAllBets()[module.config.options().bets.current_bet_index+1])){
+      module.activate('betDown')
+        .activate('minBet');
+    }
+
+    return module;
+  }
+
+  function afterBetDown(){
+
+    //is it minimum bet?
+    if(module.getBet() === 5){
+      module.disable('betDown')
+        .disable('minBet');
+    }
+
+    //the bet is last before posible default-max bet?
+    if(module.getBet() === module.takeAllBets()[module.takeAllBets()[-2]]){
+      module.activate('betUp')
+        .activate('maxBet');
+    }
+
+    //it have monney to bet up?
+    if(module.getBet() <= module.getAmount()){
+      module.activate('betUp')
+        .activate('maxBet');
+    }
+
+    return module;
+  }
+
+    module.afterBetUp = afterBetUp;
+    module.afterBetDown = afterBetDown;
     module.takeAllBets = takeAllBets;
     module.getBet = getBet;
     module.setBet = setBet;
