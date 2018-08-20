@@ -43,19 +43,19 @@ var SlotMashine = SlotMashine || {};
         .updateAmountOrBetUI('amount', module.getAmount());
       
       //monney are greater then second posible bet?
-      if(module.getAmount() >= module.takeAllBets()[1]){
+      if(module.getAmount() >= module.getAllBets()[1]){
         module.activate('betUp')
           .activate('betDown')
           .activate('minBet');
       }
 
       //is it posible to rise the bet?
-      if(module.getAmount() >= module.takeAllBets()[1] && module.getAmount() >= module.takeAllBets()[module.config.options().bets.current_bet_index + 1]){
+      if(module.getAmount() >= module.getAllBets()[1] && module.getAmount() >= module.getAllBets()[module.config.options().bets.current_bet_index + 1]){
         module.activate('maxBet');
       }
 
       //run out of monney or still play?
-      if(module.getAmount() < module.takeAllBets()[0]){
+      if(module.getAmount() < module.getAllBets()[0]){
         module.disable('spin');
       }else{
         module.activate('spin');
@@ -63,8 +63,8 @@ var SlotMashine = SlotMashine || {};
 
       //monney are less then the current bet?
       if(module.getAmount() < module.getBet()){
-        module.setBet(module.takeAllBets()[0])
-          .updateAmountOrBetUI('bet', module.takeAllBets()[0]);
+        module.setBet(module.getAllBets()[0])
+          .updateAmountOrBetUI('bet', module.getAllBets()[0]);
 
         //is posible to rise the bet?
         if(module.getAmount() > module.getBet()){
@@ -74,13 +74,13 @@ var SlotMashine = SlotMashine || {};
       }
 
       //is not posible to rise the bet?
-      if(module.getBet() === module.takeAllBets()[module.takeAllBets().length - 1]){
+      if(module.getBet() === module.getAllBets()[module.getAllBets().length - 1]){
         module.disable('betUp')
           .disable('maxBet');
       }
 
       //monney are the minimum posible bet?
-      if(module.getBet() === module.takeAllBets()[0]){
+      if(module.getBet() === module.getAllBets()[0]){
         module.disable('betDown');
       }
 
@@ -94,7 +94,7 @@ var SlotMashine = SlotMashine || {};
     return module;
   }
 
-  function setSwitchButton(){
+  function listenForSwitchButton(){
     module.buttons.switch.on('click', function(e){
       e.preventDefault();
       module.switchGame();
@@ -141,7 +141,7 @@ var SlotMashine = SlotMashine || {};
     return module;
   }
 
-  function setBetUp(){
+  function listenForBetUp(){
     module.buttons.betUp.click(function(e){
       e.preventDefault();
       if(module.isActive('betUp')){
@@ -154,7 +154,7 @@ var SlotMashine = SlotMashine || {};
     return module;
   }
 
-  function setBetDown(){
+  function listenForBetDown(){
     module.buttons.betDown.click(function(e){
       e.preventDefault();
       if(module.isActive('betDown')){
@@ -167,11 +167,11 @@ var SlotMashine = SlotMashine || {};
     return module;
   }
 
-  function setMinBet(){
+  function listenForMinBet(){
     module.buttons.minBet.click(function(e){
       e.preventDefault();
-      module.setBet(module.takeAllBets()[0]);
-      module.updateAmountOrBetUI('bet', module.takeAllBets()[0])
+      module.setBet(module.getAllBets()[0]);
+      module.updateAmountOrBetUI('bet', module.getAllBets()[0])
         .activate('betUp')
         .disable('betDown')
         .disable('minBet')
@@ -181,14 +181,14 @@ var SlotMashine = SlotMashine || {};
     return module;
   }
 
-  function setMaxBet(){
+  function listenForMaxBet(){
     module.buttons.maxBet.click(function(e){
       e.preventDefault();
       if(module.isActive('maxBet')){
-        let maxPosibleBet = module.takeAllBets().reverse().find((b) => {
+        let maxPosibleBet = module.getAllBets().reverse().find((b) => {
           return b <= module.getAmount();
         });
-        module.takeAllBets().reverse();
+        module.getAllBets().reverse();
         module.setBet(maxPosibleBet)
           .updateAmountOrBetUI('bet', maxPosibleBet)
           .disable('betUp')
@@ -201,7 +201,7 @@ var SlotMashine = SlotMashine || {};
     return module;
   }
 
-  function setAutoPlay(){
+  function listenForAutoPlay(){
 
     module.buttons.autoPlay.click(function(e){
       module.config.options().autoPlayOn = true;
@@ -212,7 +212,7 @@ var SlotMashine = SlotMashine || {};
     return module;
   }
 
-  function setSpeed(){
+  function listenForSpeed(){
     module.buttons.speed.click(function(e){
       e.preventDefault();
       if(module.buttons.speed.text() === 'Speed Up'){
@@ -229,15 +229,15 @@ var SlotMashine = SlotMashine || {};
 
   module.setGame = setGame;
   module.listenForClickOnSpinButton = listenForClickOnSpinButton;
-  module.setBetUp = setBetUp;
-  module.setBetDown = setBetDown;
-  module.setMinBet = setMinBet;
-  module.setMaxBet = setMaxBet;
-  module.setSpeed = setSpeed;
-  module.setAutoPlay = setAutoPlay;
+  module.listenForBetUp = listenForBetUp;
+  module.listenForBetDown = listenForBetDown;
+  module.listenForMinBet = listenForMinBet;
+  module.listenForMaxBet = listenForMaxBet;
+  module.listenForSpeed = listenForSpeed;
+  module.listenForAutoPlay = listenForAutoPlay;
   module.listenFor_rellCounting = listenFor_rellCounting;
   module.listenFor_animateRellsStart = listenFor_animateRellsStart;
   module.listenFor_animateRellsEnd = listenFor_animateRellsEnd;
-  module.setSwitchButton = setSwitchButton;
+  module.listenForSwitchButton = listenForSwitchButton;
 
 })(jQuery, SlotMashine);

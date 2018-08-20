@@ -33,8 +33,24 @@ var SlotMashine = SlotMashine || {};
     return module.config.options().bets.current_bet_index;
   }
 
-  function takeAllBets(){
+  function getAllBets(){
     return module.config.options().bets.all;
+  }
+
+  function getBeforeLastPosibleBet(){
+    return module.getAllBets()[module.getAllBets()[-2]];
+  }
+
+  function getSecondPosibleBet(){
+    return module.getAllBets()[1];
+  }
+
+  function getTheSmallestPosibleBet(){
+    return module.getAllBets()[0];
+  }
+
+  function getTheBiggestPosibleBet(){
+    return module.getAllBets()[module.getAllBets().length-1];
   }
 
   function setCacheIncomingCash(cash){
@@ -46,16 +62,27 @@ var SlotMashine = SlotMashine || {};
     return module.config.options().incoming_cash;
   }
 
+  function getNextPosibleBet(){
+    return (module.getAllBets()[module.config.options().bets.current_bet_index+1] === undefined
+      ? module.getTheBiggestPosibleBet()
+      : module.getAllBets()[module.config.options().bets.current_bet_index+1]);
+  }
+
   function afterBetUp(){
+    //is it biggest bet?
+    if(module.getBet() === module.getTheBiggestPosibleBet()){
+      module.disable('betUp')
+        .disable('maxBet');
+    }
 
     //do not have monney for bigger bet?
-    if(module.getAmount() < (module.takeAllBets()[module.config.options().bets.current_bet_index+1] || module.takeAllBets()[module.takeAllBets().length-1])){
+    if(module.getAmount() < module.getNextPosibleBet()){
       module.disable('betUp')
         .disable('maxBet');
     }
 
     //the bet is second posible bet or amount are at least next bet value?
-    if(module.getBet() === module.takeAllBets()[1] || module.getAmount() >= (module.takeAllBets()[module.config.options().bets.current_bet_index+1])){
+    if(module.getBet() === module.getSecondPosibleBet() || module.getAmount() >= module.getNextPosibleBet()){
       module.activate('betDown')
         .activate('minBet');
     }
@@ -66,19 +93,19 @@ var SlotMashine = SlotMashine || {};
   function afterBetDown(){
 
     //is it minimum bet?
-    if(module.getBet() === 5){
+    if(module.getBet() === module.getTheSmallestPosibleBet()){
       module.disable('betDown')
         .disable('minBet');
     }
 
     //the bet is last before posible default-max bet?
-    if(module.getBet() === module.takeAllBets()[module.takeAllBets()[-2]]){
+    if(module.getBet() === module.getBeforeLastPosibleBet()){
       module.activate('betUp')
         .activate('maxBet');
     }
 
     //it have monney to bet up?
-    if(module.getBet() <= module.getAmount()){
+    if(module.getAmount() > module.getBet()){
       module.activate('betUp')
         .activate('maxBet');
     }
@@ -88,7 +115,12 @@ var SlotMashine = SlotMashine || {};
 
     module.afterBetUp = afterBetUp;
     module.afterBetDown = afterBetDown;
-    module.takeAllBets = takeAllBets;
+    module.getAllBets = getAllBets;
+    module.getBeforeLastPosibleBet = getBeforeLastPosibleBet;
+    module.getSecondPosibleBet = getSecondPosibleBet;
+    module.getTheSmallestPosibleBet = getTheSmallestPosibleBet;
+    module.getTheBiggestPosibleBet = getTheBiggestPosibleBet;
+    module.getNextPosibleBet = getNextPosibleBet;
     module.getBet = getBet;
     module.setBet = setBet;
     module.betUp = betUp;
