@@ -5,8 +5,8 @@ var SlotMashine = SlotMashine || {};
   function createTables(target){
 
     const tables = {};
-    const koeficients = module.config.options().koeficients.all;
-    const points = module.config.options().koeficients.points;
+    const koeficients = module.config.options().games[module.config.options().currentGame].koeficients.all;
+    const points = module.config.options().games[module.config.options().currentGame].koeficients.points;
     const images = ['./images/1.png', './images/2.png', './images/3.png', './images/4.png', './images/5.png', './images/6.png'];
     const numberOfRells = module.config.settings().rells;
     let imgIterator = images[Symbol.iterator]();

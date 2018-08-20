@@ -106,21 +106,21 @@ var SlotMashine = SlotMashine || {};
 
     if(points === null){
       points = 0;
-      let first = isMatch(imagesIds, indexes[0], indexes[0], imagesIds[indexes[0]], points, true, false, false, true) * module.config.options().koeficients.all[module.config.options().koeficients.current] * module.getBet();
-      module.config.options().koeficients.current = 1;
+      let first = isMatch(imagesIds, indexes[0], indexes[0], imagesIds[indexes[0]], points, true, false, false, true) * module.config.options().games[module.config.options().currentGame].koeficients.all[module.config.options().games[module.config.options().currentGame].koeficients.current] * module.getBet();
+      module.config.options().games[module.config.options().currentGame].koeficients.current = 1;
 
-      let second = isMatch(imagesIds, indexes[1], indexes[1], imagesIds[indexes[1]], points, false, true, false, true) * module.config.options().koeficients.all[module.config.options().koeficients.current] * module.getBet();
-      module.config.options().koeficients.current = 1;
+      let second = isMatch(imagesIds, indexes[1], indexes[1], imagesIds[indexes[1]], points, false, true, false, true) * module.config.options().games[module.config.options().currentGame].koeficients.all[module.config.options().games[module.config.options().currentGame].koeficients.current] * module.getBet();
+      module.config.options().games[module.config.options().currentGame].koeficients.current = 1;
 
-      let third = isMatch(imagesIds, indexes[2], indexes[2], imagesIds[indexes[2]], points, false, false, true, true) * module.config.options().koeficients.all[module.config.options().koeficients.current] * module.getBet();
-      module.config.options().koeficients.current = 1;
+      let third = isMatch(imagesIds, indexes[2], indexes[2], imagesIds[indexes[2]], points, false, false, true, true) * module.config.options().games[module.config.options().currentGame].koeficients.all[module.config.options().games[module.config.options().currentGame].koeficients.current] * module.getBet();
+      module.config.options().games[module.config.options().currentGame].koeficients.current = 1;
 
       return Math.ceil(first + second + third);
     }else{
 
       //check first Rell vs second Rell
       if(comingFromFirstRell){
-        module.config.options().koeficients.current = srcNumber;
+        module.config.options().games[module.config.options().currentGame].koeficients.current = srcNumber;
 
         if(comingFromFirstRow){
           // Row #1, Rell #1 === Row #1, Rell #2
@@ -162,12 +162,12 @@ var SlotMashine = SlotMashine || {};
 
       //check second Rell vs third Rell
       if(comingFromSecondRell){
-        module.config.options().koeficients.current = srcNumber;
+        module.config.options().games[module.config.options().currentGame].koeficients.current = srcNumber;
         
         if(comingFromFirstRow){
           // Row #1, Rell #2 === Row #1, Rell #3
           if(srcNumber === imagesIds[indexes[6]]){
-            points+= module.config.options().koeficients.points.forThreeLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forThreeLines;
             module.config.options().grid.winingIds.push(firstRellSrc);
             module.config.options().grid.winingIds.push(prevSrcNumber);
             module.config.options().grid.winingIds.push(indexes[6]);
@@ -178,7 +178,7 @@ var SlotMashine = SlotMashine || {};
           }
           // Row #1, Rell #2 === Row #2, Rell #3
           if(srcNumber === imagesIds[indexes[7]]){
-            points+= module.config.options().koeficients.points.forThreeLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forThreeLines;
             module.config.options().grid.winingIds.push(firstRellSrc);
             module.config.options().grid.winingIds.push(prevSrcNumber);
             module.config.options().grid.winingIds.push(indexes[7]);
@@ -191,7 +191,7 @@ var SlotMashine = SlotMashine || {};
         if(comingFromSecondRow){
           // Row #2, Rell #2 === Row #1, Rell #3
           if(srcNumber === imagesIds[indexes[6]]){
-            points+= module.config.options().koeficients.points.forThreeLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forThreeLines;
             module.config.options().grid.winingIds.push(firstRellSrc);
             module.config.options().grid.winingIds.push(prevSrcNumber);
             module.config.options().grid.winingIds.push(indexes[6]);
@@ -202,7 +202,7 @@ var SlotMashine = SlotMashine || {};
           }
           // Row #2, Rell #2 === Row #2, Rell #3
           if(srcNumber === imagesIds[indexes[7]]){
-            points+= module.config.options().koeficients.points.forThreeLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forThreeLines;
             module.config.options().grid.winingIds.push(firstRellSrc);
             module.config.options().grid.winingIds.push(prevSrcNumber);
             module.config.options().grid.winingIds.push(indexes[7]);
@@ -213,7 +213,7 @@ var SlotMashine = SlotMashine || {};
           }
           // Row #2, Rell #2 === Row #2, Rell #3
           if(srcNumber === imagesIds[indexes[8]]){
-            points+= module.config.options().koeficients.points.forThreeLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forThreeLines;
             module.config.options().grid.winingIds.push(firstRellSrc);
             module.config.options().grid.winingIds.push(prevSrcNumber);
             module.config.options().grid.winingIds.push(indexes[8]);
@@ -226,7 +226,7 @@ var SlotMashine = SlotMashine || {};
         if(comingFromThirdRow){
           // Row #3, Rell #2 === Row #2, Rell #3
           if(srcNumber === imagesIds[indexes[7]]){
-            points+= module.config.options().koeficients.points.forThreeLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forThreeLines;
             module.config.options().grid.winingIds.push(firstRellSrc);
             module.config.options().grid.winingIds.push(prevSrcNumber);
             module.config.options().grid.winingIds.push(indexes[7]);
@@ -237,7 +237,7 @@ var SlotMashine = SlotMashine || {};
           }
           // Row #3, Rell #2 === Row #2, Rell #3
           if(srcNumber === imagesIds[indexes[8]]){
-            points+= module.config.options().koeficients.points.forThreeLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forThreeLines;
             module.config.options().grid.winingIds.push(firstRellSrc);
             module.config.options().grid.winingIds.push(prevSrcNumber);
             module.config.options().grid.winingIds.push(indexes[8]);
@@ -251,18 +251,18 @@ var SlotMashine = SlotMashine || {};
 
       //check third Rell vs fourth Rell
       if(comingFromThirdRell){
-        module.config.options().koeficients.current = srcNumber;
+        module.config.options().games[module.config.options().currentGame].koeficients.current = srcNumber;
         
         if(comingFromFirstRow){
           // Row #1, Rell #3 === Row #1, Rell #4
           if(srcNumber === imagesIds[indexes[9]]){
-            points+= module.config.options().koeficients.points.forFourLines - module.config.options().koeficients.points.forThreeLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forFourLines - module.config.options().games[module.config.options().currentGame].koeficients.points.forThreeLines;
             module.config.options().grid.winingIds.push(indexes[9]);
             points = isMatch(imagesIds, null, null, srcNumber, points, true, false, false, false, false, false, true);
           }
           // Row #1, Rell #3 === Row #2, Rell #4
           if(srcNumber === imagesIds[indexes[10]]){
-            points+= module.config.options().koeficients.points.forFourLines - module.config.options().koeficients.points.forThreeLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forFourLines - module.config.options().games[module.config.options().currentGame].koeficients.points.forThreeLines;
             module.config.options().grid.winingIds.push(indexes[10]);
             points = isMatch(imagesIds, null, null, srcNumber, points, false, true, false, false, false, false, true);
           }
@@ -270,19 +270,19 @@ var SlotMashine = SlotMashine || {};
         if(comingFromSecondRow){
           // Row #2, Rell #3 === Row #1, Rell #4
           if(srcNumber === imagesIds[indexes[9]]){
-            points+= module.config.options().koeficients.points.forFourLines - module.config.options().koeficients.points.forThreeLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forFourLines - module.config.options().games[module.config.options().currentGame].koeficients.points.forThreeLines;
             module.config.options().grid.winingIds.push(indexes[9]);
             points = isMatch(imagesIds, null, null, srcNumber, points, true, false, false, false, false, false, true);
           }
           // Row #2, Rell #3 === Row #2, Rell #4
           if(srcNumber === imagesIds[indexes[10]]){
-            points+= module.config.options().koeficients.points.forFourLines - module.config.options().koeficients.points.forThreeLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forFourLines - module.config.options().games[module.config.options().currentGame].koeficients.points.forThreeLines;
             module.config.options().grid.winingIds.push(indexes[10]);
             points = isMatch(imagesIds, null, null, srcNumber, points, false, true, false, false, false, false, true);
           }
           // Row #2, Rell #3 === Row #2, Rell #4
           if(srcNumber === imagesIds[indexes[11]]){
-            points+= module.config.options().koeficients.points.forFourLines - module.config.options().koeficients.points.forThreeLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forFourLines - module.config.options().games[module.config.options().currentGame].koeficients.points.forThreeLines;
             module.config.options().grid.winingIds.push(indexes[11]);
             points = isMatch(imagesIds, null, null, srcNumber, points, false, false, true, false, false, false, true);
           }
@@ -290,13 +290,13 @@ var SlotMashine = SlotMashine || {};
         if(comingFromThirdRow){
           // Row #3, Rell #3 === Row #2, Rell #4
           if(srcNumber === imagesIds[indexes[10]]){
-            points+= module.config.options().koeficients.points.forFourLines - module.config.options().koeficients.points.forThreeLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forFourLines - module.config.options().games[module.config.options().currentGame].koeficients.points.forThreeLines;
             module.config.options().grid.winingIds.push(indexes[10]);
             points = isMatch(imagesIds, null, null, srcNumber, points, false, true, false, false, false, false, true);
           }
           // Row #3, Rell #3 === Row #2, Rell #4
           if(srcNumber === imagesIds[indexes[11]]){
-            points+= module.config.options().koeficients.points.forFourLines - module.config.options().koeficients.points.forThreeLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forFourLines - module.config.options().games[module.config.options().currentGame].koeficients.points.forThreeLines;
             module.config.options().grid.winingIds.push(indexes[11]);
             points = isMatch(imagesIds, null, null, srcNumber, points, false, false, true, false, false, false, true);
           }
@@ -305,46 +305,46 @@ var SlotMashine = SlotMashine || {};
 
       //check fourth Rell vs fiveth Rell
       if(comingFromFourthRell){
-        module.config.options().koeficients.current = srcNumber;
+        module.config.options().games[module.config.options().currentGame].koeficients.current = srcNumber;
         
         if(comingFromFirstRow){
           // Row #1, Rell #4 === Row #1, Rell #5
           if(srcNumber === imagesIds[indexes[12]]){
-            points+= module.config.options().koeficients.points.forFiveLines - module.config.options().koeficients.points.forFourLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forFiveLines - module.config.options().games[module.config.options().currentGame].koeficients.points.forFourLines;
             module.config.options().grid.winingIds.push(indexes[12]);
           }
           // Row #1, Rell #4 === Row #2, Rell #5
           if(srcNumber === imagesIds[indexes[13]]){
-            points+= module.config.options().koeficients.points.forFiveLines - module.config.options().koeficients.points.forFourLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forFiveLines - module.config.options().games[module.config.options().currentGame].koeficients.points.forFourLines;
             module.config.options().grid.winingIds.push(indexes[13]);
           }
         }
         if(comingFromSecondRow){
           // Row #2, Rell #4 === Row #1, Rell #5
           if(srcNumber === imagesIds[indexes[12]]){
-            points+= module.config.options().koeficients.points.forFiveLines - module.config.options().koeficients.points.forFourLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forFiveLines - module.config.options().games[module.config.options().currentGame].koeficients.points.forFourLines;
             module.config.options().grid.winingIds.push(indexes[12]);
           }
           // Row #2, Rell #4 === Row #2, Rell #5
           if(srcNumber === imagesIds[indexes[13]]){
-            points+= module.config.options().koeficients.points.forFiveLines - module.config.options().koeficients.points.forFourLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forFiveLines - module.config.options().games[module.config.options().currentGame].koeficients.points.forFourLines;
             module.config.options().grid.winingIds.push(indexes[13]);
           }
           // Row #2, Rell #4 === Row #2, Rell #5
           if(srcNumber === imagesIds[indexes[14]]){
-            points+= module.config.options().koeficients.points.forFiveLines - module.config.options().koeficients.points.forFourLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forFiveLines - module.config.options().games[module.config.options().currentGame].koeficients.points.forFourLines;
             module.config.options().grid.winingIds.push(indexes[14]);
           }
         }
         if(comingFromThirdRow){
           // Row #3, Rell #4 === Row #2, Rell #5
           if(srcNumber === imagesIds[indexes[13]]){
-            points+= module.config.options().koeficients.points.forFiveLines - module.config.options().koeficients.points.forFourLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forFiveLines - module.config.options().games[module.config.options().currentGame].koeficients.points.forFourLines;
             module.config.options().grid.winingIds.push(indexes[13]);
           }
           // Row #3, Rell #4 === Row #2, Rell #5
           if(srcNumber === imagesIds[indexes[14]]){
-            points+= module.config.options().koeficients.points.forFiveLines - module.config.options().koeficients.points.forFourLines;
+            points+= module.config.options().games[module.config.options().currentGame].koeficients.points.forFiveLines - module.config.options().games[module.config.options().currentGame].koeficients.points.forFourLines;
             module.config.options().grid.winingIds.push(indexes[14]);
           }
         }

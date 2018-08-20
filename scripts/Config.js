@@ -18,21 +18,44 @@ var SlotMashine = SlotMashine || {};
         ],
         'current_bet_index': 0
       },
-      'koeficients': {
-        'points': {
-          'forThreeLines': 2,
-          'forFourLines': 3,
-          'forFiveLines': 4
+      'currentGame': '3X3',
+      'games': {
+        '3X3': {
+          'koeficients': {
+            'points': {
+              'forThreeLines': 2,
+              'forFourLines': 3,
+              'forFiveLines': 4
+            },
+            'all': {
+              '1': 0.2,
+              '2': 0.4,
+              '3': 0.6,
+              '4': 0.8,
+              '5': 1,
+              '6': 1.2
+            },
+            'current': 1
+          }
         },
-        'all': {
-          '1': 0.2,
-          '2': 0.4,
-          '3': 0.6,
-          '4': 0.8,
-          '5': 1,
-          '6': 1.2
-        },
-        'current': 1
+        '3X5': {
+          'koeficients': {
+            'points': {
+              'forThreeLines': 1,
+              'forFourLines': 2,
+              'forFiveLines': 3
+            },
+            'all': {
+              '1': 0.2,
+              '2': 0.4,
+              '3': 0.6,
+              '4': 0.8,
+              '5': 1,
+              '6': 1.2
+            },
+            'current': 1
+          }
+        }
       },
       'timeControll': {
         'animateOnButtonClick': 200,

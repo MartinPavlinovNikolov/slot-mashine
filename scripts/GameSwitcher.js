@@ -9,6 +9,10 @@ var SlotMashine = SlotMashine || {};
     }else{
       module.buttons.switch.text(module.config.settings().game3X5);
     }
+    
+    module.config.options().currentGame = module.config.options().currentGame === '3X5'
+      ?module.config.settings().game3X3
+      : module.config.settings().game3X5;
 
     const screen = document.getElementById('screen');
     screen.innerHTML = '';
