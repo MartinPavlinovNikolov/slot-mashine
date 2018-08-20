@@ -42,20 +42,20 @@ var SlotMashine = SlotMashine || {};
       module.add(incoming_cash)
         .updateAmountOrBetUI('amount', module.getAmount());
       
-      //monney are greater then second posible bet?
-      if(module.getAmount() >= module.getAllBets()[1]){
-        module.activate('betUp')
-          .activate('betDown')
+      //monney are greater or equal then second posible bet?
+      if(module.getAmount() >= module.getSecondPosibleBet()){
+        module.activate('betDown')
           .activate('minBet');
       }
 
       //is it posible to rise the bet?
-      if(module.getAmount() >= module.getAllBets()[1] && module.getAmount() >= module.getAllBets()[module.config.options().bets.current_bet_index + 1]){
-        module.activate('maxBet');
+      if(module.getAmount() >= module.getSecondPosibleBet() && module.getAmount() >= module.getNextPosibleBet()){
+        module.activate('maxBet')
+          .activate('betUp');
       }
 
       //run out of monney or still play?
-      if(module.getAmount() < module.getAllBets()[0]){
+      if(module.getAmount() < module.getTheSmallestPosibleBet()){
         module.disable('spin');
       }else{
         module.activate('spin');
@@ -63,8 +63,8 @@ var SlotMashine = SlotMashine || {};
 
       //monney are less then the current bet?
       if(module.getAmount() < module.getBet()){
-        module.setBet(module.getAllBets()[0])
-          .updateAmountOrBetUI('bet', module.getAllBets()[0]);
+        module.setBet(module.getTheSmallestPosibleBet())
+          .updateAmountOrBetUI('bet', module.getTheSmallestPosibleBet());
 
         //is posible to rise the bet?
         if(module.getAmount() > module.getBet()){
@@ -74,14 +74,15 @@ var SlotMashine = SlotMashine || {};
       }
 
       //is not posible to rise the bet?
-      if(module.getBet() === module.getAllBets()[module.getAllBets().length - 1]){
+      if(module.getBet() === module.getTheBiggestPosibleBet()){
         module.disable('betUp')
           .disable('maxBet');
       }
 
       //monney are the minimum posible bet?
-      if(module.getBet() === module.getAllBets()[0]){
-        module.disable('betDown');
+      if(module.getBet() === module.getTheSmallestPosibleBet()){
+        module.disable('betDown')
+          .disable('minBet');
       }
 
       //is auto-play on?
