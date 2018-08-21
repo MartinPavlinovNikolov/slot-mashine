@@ -70,6 +70,7 @@
     <script src="scripts/Wins.js"></script>
     <script src="scripts/Info.js"></script>
     <script src="scripts/GameSwitcher.js"></script>
+    <script src="scripts/Matrix.js"></script>
     <script src="scripts/SlotMashine.js"></script>
     <script src="scripts/main.js"></script>
     
