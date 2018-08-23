@@ -55,7 +55,7 @@ Matrix.prototype.map = function(func){
   for(let i = 0; i < this.rows; i++){
     for(let j = 0; j < this.cols; j++){
       let value = this.data[i][j];
-      this.data[i][j] = func(value);
+      this.data[i][j] = func(value, i, j);
     }
   }
 
