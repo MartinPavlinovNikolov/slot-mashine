@@ -41,6 +41,37 @@ Matrix.multiply = function(a, b){
   return result;
 }
 
+Matrix.subtract = function(A, B){
+    
+  let result = new Matrix(A.rows, A.cols);
+
+  for(let i = 0; i < result.rows; i++){
+    for(let j = 0; j < result.cols; j++){
+      result.data[i][j] = A.data[i][j] - B.data[i][j];
+    }
+  }
+
+  return result;
+}
+
+Matrix.prototype.toArray = function(){
+  let array = [];
+  for(let i = 0; i < this.rows; i++){
+    for(let j = 0; j < this.cols; j++){
+      array.push(this.data[i][j]);
+    }
+  }
+  return array;
+}
+
+Matrix.fromArray = function(array){
+  let m = new Matrix(array.length, 1);
+  for(let i = 0; i < array.length; i++){
+    m.data[i][0] = array[i];
+  }
+  return m;
+}
+
 Matrix.prototype.multiply = function(multiplyer){
   for(let i = 0; i < this.rows; i++){
     for(let j = 0; j < this.cols; j++){
@@ -60,6 +91,18 @@ Matrix.prototype.map = function(func){
   }
 
   return this;
+}
+
+Matrix.map = function(matrix, func){
+  let result = new Matrix(matrix.rows, matrix.cols);
+  for(let i = 0; i < matrix.rows; i++){
+    for(let j = 0; j < matrix.cols; j++){
+      let value = matrix.data[i][j];
+      result.data[i][j] = func(value, i, j);
+    }
+  }
+
+  return result;
 }
 
 Matrix.prototype.add = function(adder){
@@ -85,6 +128,7 @@ Matrix.prototype.add = function(adder){
   return this;
 }
 
+
 Matrix.prototype.randomize = function(from, to){
   for(let i = 0; i < this.rows; i++){
     for(let j = 0; j < this.cols; j++){
@@ -95,13 +139,13 @@ Matrix.prototype.randomize = function(from, to){
   return this;
 }
 
-Matrix.prototype.transpose = function(){
+Matrix.transpose = function(matrix){
   
-  const result = new Matrix(this.cols, this.rows);
+  const result = new Matrix(matrix.cols, matrix.rows);
 
-  for(let i = 0; i < this.rows; i++){
-    for(let j = 0; j < this.cols; j++){
-      result.data[j][i] = this.data[i][j];
+  for(let i = 0; i < matrix.rows; i++){
+    for(let j = 0; j < matrix.cols; j++){
+      result.data[j][i] = matrix.data[i][j];
     }
   }
 
