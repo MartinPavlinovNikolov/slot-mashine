@@ -5,9 +5,9 @@ var SlotMashine = SlotMashine || {};
   function switchGame(){
     
     if(module.config.settings().rells === 5){
-      module.buttons.switch.text(module.config.settings().game3X3);
+      module.buttons.switch.text('Swich to ' + module.config.settings().game3X5);
     }else{
-      module.buttons.switch.text(module.config.settings().game3X5);
+      module.buttons.switch.text('Swich to ' + module.config.settings().game3X3);
     }
     
     module.config.options().currentGame = module.config.options().currentGame === '3X5'
