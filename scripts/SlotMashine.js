@@ -109,9 +109,9 @@ var SlotMashine = SlotMashine || {};
     module.createTables('info-table');
 
     if(module.config.settings().rells === 5){
-      module.buttons.switch.text('Swith to ' + module.config.settings().game3X5);
-    }else{
       module.buttons.switch.text('Swith to ' + module.config.settings().game3X3);
+    }else{
+      module.buttons.switch.text('Swith to ' + module.config.settings().game3X5);
     }
     module.updateAmountOrBetUI('amount', 2000)
       .updateAmountOrBetUI('bet', 5)
